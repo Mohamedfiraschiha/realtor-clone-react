@@ -94,7 +94,7 @@ export default function CreateListing() {
       if (!res.ok) throw new Error("Failed to create listing");
       const data = await res.json();
       toast.success("Listing created");
-      navigate(`/category/${listing.type}/${data._id}`);
+      navigate("/profile");
     } catch (error) {
       toast.error(error.message || "Something went wrong");
     } finally {

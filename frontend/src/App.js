@@ -7,6 +7,7 @@ import Signin from "./pages/Signin";
 import Signup from "./pages/signup";
 import ForGotPassword from "./pages/ForGotPassword";
 import EditListing from "./pages/EditListing";
+import ShowListing from "./pages/ShowListing";
 import Header from "./Components/Header";
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/forgot-password" element={<ForGotPassword />} />
 <Route path="/create-listing" element={<CreateListing />} />
 <Route path="/edit-listing/:id" element={<EditListing />} />
+<Route path="/show-listing/:id" element={<ShowListing />} />
         </Routes>
       </Router>
     </>

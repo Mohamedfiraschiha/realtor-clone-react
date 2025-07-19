@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ListingItem({ listing, onEdit, onDelete }) {
+export default function ListingItem({ listing, onEdit, onDelete, onShow }) {
   return (
     <li className="border p-4 rounded mb-4 flex flex-col">
       <div className="flex-1">
@@ -20,6 +20,7 @@ export default function ListingItem({ listing, onEdit, onDelete }) {
         </div>
       </div>
       <div className="flex mt-2 space-x-2">
+        <button onClick={onShow} className="bg-green-500 text-white px-3 py-1 rounded">Show</button>
         <button onClick={onEdit} className="bg-blue-500 text-white px-3 py-1 rounded">Edit</button>
         <button onClick={onDelete} className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
       </div>

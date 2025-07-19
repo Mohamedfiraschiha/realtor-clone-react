@@ -199,6 +199,7 @@ export default function Profile() {
                 listing={listing}
                 onDelete={() => onDelete(listing._id)}
                 onEdit={() => onEdit(listing._id)}
+                onShow={() => navigate(`/show-listing/${listing._id}`)}
               />
             ))}
           </ul>

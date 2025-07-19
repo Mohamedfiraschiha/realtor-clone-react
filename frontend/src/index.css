@@ -1,25 +1,30 @@
+/* === Swiper + Leaflet === */
+@import "leaflet/dist/leaflet.css";
+@import "swiper/css/bundle";
+
+/* === Tailwind === */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-body{
-    background-color: rgb(240, 253, 244);
+/* === Custom Styles === */
+body {
+  background-color: rgb(240, 253, 244);
 }
 
 .swiper-button-next:after,
-.swiper-button-prev:after{
-    color: #a8dadc;
+.swiper-button-prev:after {
+  color: #a8dadc;
 }
 
-.swiper-pagination-progressbar .swiper-pagination-progressbar-fill{
-    background: #a8dadc !important
+.swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
+  background: #a8dadc !important;
 }
 
-html::-webkit-scrollbar{
-    display: none;
+html::-webkit-scrollbar {
+  display: none;
 }
 
-html{
-    scrollbar-width: none;
+html {
+  scrollbar-width: none;
 }

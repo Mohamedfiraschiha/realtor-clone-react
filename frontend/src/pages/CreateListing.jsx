@@ -24,8 +24,8 @@ export default function CreateListing() {
 
   function onChange(e) {
     let boolean = null;
-    if (e.target.value === "true") boolean = true;
-    if (e.target.value === "false") boolean = false;
+    if (e.target.value === "true" || e.target.value === true) boolean = true;
+    if (e.target.value === "false" || e.target.value === false) boolean = false;
     if (e.target.files) {
       setFormData((prev) => ({ ...prev, images: e.target.files }));
     } else {

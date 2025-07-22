@@ -18,7 +18,6 @@
     "mailgun.js": "^12.0.3",
     "mongodb": "^6.17.0",
     "next": "15.3.5",
-    "nextjs-cors": "^2.2.0",
     "nodemailer": "^7.0.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

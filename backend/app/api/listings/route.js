@@ -36,6 +36,46 @@ async function handler(request) {
   });
 }
 
-// Export handlers for Next.js app router
+// GET handler for fetching listings with optional filters
+async function getListings(request) {
+  if (request.method !== "GET") {
+    return new Response("Method Not Allowed", { status: 405 });
+  }
+
+  try {
+    const url = new URL(request.url);
+    const offer = url.searchParams.get("offer");
+    const type = url.searchParams.get("type");
+    const limit = parseInt(url.searchParams.get("limit")) || 10;
+
+    const client = await clientPromise;
+    const db = client.db();
+
+    // Build query
+    const query = {};
+    if (offer === "true") query.offer = true;
+    if (type) query.type = type;
+
+    const listings = await db
+      .collection("listings")
+      .find(query)
+      .sort({ timestamp: -1 })
+      .limit(limit)
+      .toArray();
+
+    return new Response(JSON.stringify(listings), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Error fetching listings:", error);
+    return new Response(JSON.stringify({ error: "Failed to fetch listings" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}
+
+export const GET = withCORS(getListings);
 export const POST = withCORS(handler);
 export const OPTIONS = withCORS(() => new Response(null, { status: 204 }));

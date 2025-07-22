@@ -11,9 +11,16 @@ export function withCORS(handler) {
       });
     }
     const response = await handler(request, ...args);
-    response.headers.set('Access-Control-Allow-Origin', '*');
-    response.headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-    return response;
+    // Always create a new Headers object to ensure CORS headers are set
+    const headers = new Headers(response.headers || {});
+    headers.set('Access-Control-Allow-Origin', '*');
+    headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+    // Return a new Response with the merged headers
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
   };
 } 

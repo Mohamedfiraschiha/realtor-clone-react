@@ -1,9 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "../Components/Spinner";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import { FaMapMarkerAlt, FaShare } from "react-icons/fa";
 import { register } from 'swiper/element/bundle';
 import "swiper/css/bundle";
+import Contact from "../Components/Contact";
+
 
 register(); // Register Swiper custom elements
 
@@ -13,6 +15,7 @@ export default function ShowListing() {
   const [loading, setLoading] = useState(true);
   const [contact, setContact] = useState(false);
   const swiperRef = useRef(null);
+  const [shareLinkCopied, setShareLinkCopied] = useState(false);
 
   useEffect(() => {
     async function fetchListing() {
@@ -48,11 +51,30 @@ export default function ShowListing() {
 
   return (
     <main>
+      {/* Share Link Icon */}
+      <div
+        className="fixed top-[13%] right-[3%] z-10 bg-white cursor-pointer border-2 border-gray-400 rounded-full w-12 h-12 flex justify-center items-center shadow-lg"
+        onClick={() => {
+          navigator.clipboard.writeText(window.location.href);
+          setShareLinkCopied(true);
+          setTimeout(() => {
+            setShareLinkCopied(false);
+          }, 2000);
+        }}
+      >
+        <FaShare className="text-2xl text-slate-500" />
+      </div>
+      {shareLinkCopied && (
+        <p className="fixed top-[23%] right-[5%] font-semibold border-2 border-gray-400 rounded-md bg-white z-10 p-2">
+          Link Copied
+        </p>
+      )}
       {/* Swiper slider at the very top, full width */}
       {listing.images && listing.images.length > 0 && (
         <swiper-container
           ref={swiperRef}
           init="false"
+          pagination="true"
           style={{ width: "100vw", maxWidth: "100vw", height: "400px", marginBottom: '2rem', position: 'relative', left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw' }}
         >
           {listing.images.map((url, index) => (
@@ -107,9 +129,7 @@ export default function ShowListing() {
             Contact Owner
           </button>
         ) : (
-          <div className="mt-4">
-            <p>Email: <a href={`mailto:${listing.userEmail}`} className="text-blue-600 underline">{listing.userEmail}</a></p>
-          </div>
+          <Contact userEmail={listing.userEmail} />
         )}
       </div>
     </main>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { API_ENDPOINTS } from "../config";
 import Slider from "../Components/Slider";
 import ListingItem from "../Components/ListingItem";
 
@@ -13,17 +14,18 @@ export default function Home() {
     async function fetchAllListings() {
       try {
         // Offers
-        const offerRes = await fetch("/api/listings?offer=true&limit=4");
+        // Offers
+        const offerRes = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}?offer=true&limit=4`);
         const offers = await offerRes.json();
         setOfferListings(offers);
 
         // Rent
-        const rentRes = await fetch("/api/listings?type=rent&limit=4");
+        const rentRes = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}?type=rent&limit=4`);
         const rents = await rentRes.json();
         setRentListings(rents);
 
         // Sale
-        const saleRes = await fetch("/api/listings?type=sale&limit=4");
+        const saleRes = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}?type=sale&limit=4`);
         const sales = await saleRes.json();
         setSaleListings(sales);
       } catch (error) {

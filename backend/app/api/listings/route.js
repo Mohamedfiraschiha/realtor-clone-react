@@ -47,6 +47,18 @@ async function getListings(request) {
     const offer = url.searchParams.get("offer");
     const type = url.searchParams.get("type");
     const limit = parseInt(url.searchParams.get("limit")) || 10;
+    const last = url.searchParams.get("last");
+    let lastObjId = null;
+    if (last) {
+      try {
+        lastObjId = new (await import("mongodb")).ObjectId(last);
+      } catch (e) {
+        return new Response(JSON.stringify({ error: "Invalid last id" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+    }
 
     const client = await clientPromise;
     const db = client.db();
@@ -55,11 +67,12 @@ async function getListings(request) {
     const query = {};
     if (offer === "true") query.offer = true;
     if (type) query.type = type;
+    if (lastObjId) query._id = { $lt: lastObjId };
 
     const listings = await db
       .collection("listings")
       .find(query)
-      .sort({ timestamp: -1 })
+      .sort({ timestamp: -1, _id: -1 })
       .limit(limit)
       .toArray();
 

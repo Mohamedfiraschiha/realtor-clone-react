@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_ENDPOINTS } from "../config";
 
 export default function Contact({ userEmail }) {
   const [message, setMessage] = useState("");
@@ -9,7 +10,7 @@ export default function Contact({ userEmail }) {
     setStatus(null);
 
     try {
-      const res = await fetch("http://localhost:3000/api/contact", {
+      const res = await fetch(API_ENDPOINTS.CONTACT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

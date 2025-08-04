@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FcHome } from "react-icons/fc";
 import ListingItem from "../Components/ListingItem";
+import { API_ENDPOINTS } from "../config";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -26,8 +27,8 @@ export default function Profile() {
       navigate("/signin");
       return;
     }
-    const API_URL = "http://localhost:3000/api/user/profile";
-    const LISTINGS_URL = "http://localhost:3000/api/listings/mine";
+    const API_URL = `${API_ENDPOINTS.LISTINGS.BASE}/user/profile`;
+    const LISTINGS_URL = `${API_ENDPOINTS.LISTINGS.BASE}/mine`;
     async function fetchProfile() {
       try {
         const res = await fetch(API_URL, {

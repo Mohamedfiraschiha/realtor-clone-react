@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "../Components/Spinner";
+import { API_ENDPOINTS } from "../config";
 
 export default function EditListing() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ export default function EditListing() {
   useEffect(() => {
     const fetchListing = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/listings/${id}`);
+        const res = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}/${id}`);
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Listing not found");
         setFormData({ ...data, images: data.images || data.imgUrls || [] });
@@ -89,7 +90,7 @@ export default function EditListing() {
       };
 
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:3000/api/listings/${id}`, {
+      const res = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

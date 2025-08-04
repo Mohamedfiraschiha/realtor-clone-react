@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+// Firebase imports removed; replaced with backend fetch logic.
 import Spinner from "../Components/Spinner";
-import { API_ENDPOINTS } from "../config";
 import ListingItem from "../Components/ListingItem";
+import { useParams } from "react-router-dom";
+import { API_ENDPOINTS } from "../config";
 
-export default function Offers() {
+export default function Category() {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [lastId, setLastId] = useState(null);
   const [hasMore, setHasMore] = useState(true);
+  const params = useParams();
 
   useEffect(() => {
     async function fetchListings() {
       try {
         setLoading(true);
-        const res = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}?offer=true&limit=8`);
+        const res = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}?type=${params.categoryName}&limit=8`);
         if (!res.ok) throw new Error("Network response was not ok");
         const data = await res.json();
         setListings(data);
@@ -31,12 +34,12 @@ export default function Offers() {
       }
     }
     fetchListings();
-  }, []);
+  }, [params.categoryName]);
 
   async function onFetchMoreListings() {
     try {
       setLoading(true);
-      const res = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}?offer=true&limit=4&last=${lastId}`);
+      const res = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}?type=${params.categoryName}&limit=4&last=${lastId}`);
       if (!res.ok) throw new Error("Network response was not ok");
       const data = await res.json();
       setListings((prev) => [...prev, ...data]);
@@ -53,28 +56,11 @@ export default function Offers() {
     }
   }
 
-  // Navigation helpers
-  const handleShow = (id) => {
-    window.location.href = `/listing/${id}`;
-  };
-  const handleEdit = (id) => {
-    window.location.href = `/edit-listing/${id}`;
-  };
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this listing?")) return;
-    try {
-      const res = await fetch(`/api/listings/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete listing");
-      setListings((prev) => prev.filter((l) => l._id !== id));
-      toast.success("Listing deleted successfully");
-    } catch (error) {
-      toast.error("Could not delete listing");
-    }
-  };
-
   return (
     <div className="max-w-6xl mx-auto px-3">
-      <h1 className="text-3xl text-center mt-6 font-bold mb-6">Offers</h1>
+      <h1 className="text-3xl text-center mt-6 font-bold mb-6">
+        {params.categoryName === "rent" ? "Places for rent" : "Places for sale"}
+      </h1>
       {loading ? (
         <Spinner />
       ) : listings && listings.length > 0 ? (
@@ -86,9 +72,6 @@ export default function Offers() {
                   key={listing._id}
                   id={listing._id}
                   listing={listing}
-                  onShow={() => handleShow(listing._id)}
-                  onEdit={() => handleEdit(listing._id)}
-                  onDelete={() => handleDelete(listing._id)}
                 />
               ))}
             </ul>
@@ -105,7 +88,12 @@ export default function Offers() {
           )}
         </>
       ) : (
-        <p>There are no current offers</p>
+        <p>
+          There are no current{" "}
+          {params.categoryName === "rent"
+            ? "places for rent"
+            : "places for sale"}
+        </p>
       )}
     </div>
   );

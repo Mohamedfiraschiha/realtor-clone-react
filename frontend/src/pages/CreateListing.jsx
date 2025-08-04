@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FcHome } from "react-icons/fc";
+import { API_ENDPOINTS } from "../config";
 import Spinner from "../Components/Spinner";
 
 export default function CreateListing() {
@@ -83,7 +84,7 @@ export default function CreateListing() {
         images: imgUrls,
       };
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:3000/api/listings", {
+      const res = await fetch(API_ENDPOINTS.LISTINGS.BASE, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

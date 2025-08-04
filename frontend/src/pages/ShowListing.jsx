@@ -4,6 +4,7 @@ import Spinner from "../Components/Spinner";
 import { FaMapMarkerAlt, FaShare } from "react-icons/fa";
 import { register } from 'swiper/element/bundle';
 import "swiper/css/bundle";
+import { API_ENDPOINTS } from "../config";
 import Contact from "../Components/Contact";
 
 
@@ -20,7 +21,7 @@ export default function ShowListing() {
   useEffect(() => {
     async function fetchListing() {
       try {
-        const res = await fetch(`http://localhost:3000/api/listings/${id}`);
+        const res = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}/${id}`);
         if (!res.ok) throw new Error("Failed to fetch listing");
         const data = await res.json();
         setListing(data);

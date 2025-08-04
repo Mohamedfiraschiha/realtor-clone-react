@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
+import { API_ENDPOINTS } from "../config";
 
 
 export default function Signup() {
@@ -27,7 +28,7 @@ export default function Signup() {
     setLoading(true);
     setMessage("");
     try {
-      const res = await fetch("http://localhost:3000/api/auth/signup", {
+      const res = await fetch(API_ENDPOINTS.AUTH.SIGNUP, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fullName, email, password }),

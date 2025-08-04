@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
-
+import { API_ENDPOINTS } from "../config";
 import GoogleAuthButton from "../Components/GoogleAuthButton";
 import Spinner from "../Components/Spinner";
 
@@ -27,7 +27,7 @@ export default function Signin() {
     e.preventDefault();
     setMessage("");
     try {
-      const res = await fetch("http://localhost:3000/api/auth/signin", {
+      const res = await fetch(API_ENDPOINTS.AUTH.SIGNIN, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

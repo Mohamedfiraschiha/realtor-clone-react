@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../Components/Spinner";
+import { API_ENDPOINTS } from "../config";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Autoplay, Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -16,7 +17,7 @@ export default function Slider() {
   useEffect(() => {
     async function fetchListings() {
       try {
-        const res = await fetch("/api/listings/slider");
+        const res = await fetch(API_ENDPOINTS.LISTINGS.SLIDER);
         const data = await res.json();
         setListings(data);
         console.log("Slider listings:", data);

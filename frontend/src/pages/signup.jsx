@@ -45,13 +45,18 @@ export default function Signup() {
       } else {
         let errorMsg = "Signup failed";
         try {
-          const errorData = await res.json();
-          errorMsg = errorData.message || errorMsg;
-          console.error('Register API error:', errorData);
-        } catch (jsonErr) {
-          const text = await res.text();
-          errorMsg = text || errorMsg;
-          console.error('Register API error (non-JSON):', text);
+          const contentType = res.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            const errorData = await res.json();
+            errorMsg = errorData.message || errorMsg;
+            console.error('Register API error:', errorData);
+          } else {
+            const text = await res.text();
+            errorMsg = text || errorMsg;
+            console.error('Register API error (non-JSON):', text);
+          }
+        } catch (err) {
+          console.error('Error reading response:', err);
         }
         setMessage(errorMsg);
       }

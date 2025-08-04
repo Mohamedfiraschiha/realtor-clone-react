@@ -1,17 +1,14 @@
-// Base URL for API requests
-export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3000';
-
-// API endpoints
+// API endpoints - using relative URLs since frontend and backend are on the same domain
 export const API_ENDPOINTS = {
   AUTH: {
-    SIGNUP: `${API_BASE_URL}/api/auth/signup`,
-    SIGNIN: `${API_BASE_URL}/api/auth/signin`,
-    FORGOT_PASSWORD: `${API_BASE_URL}/api/auth/forgot-password`,
-    RESET_PASSWORD: `${API_BASE_URL}/api/auth/reset-password`,
+    SIGNUP: `/api/auth/signup`,
+    SIGNIN: `/api/auth/signin`,
+    FORGOT_PASSWORD: `/api/auth/forgot-password`,
+    RESET_PASSWORD: `/api/auth/reset-password`,
   },
   LISTINGS: {
-    BASE: `${API_BASE_URL}/api/listings`,
-    SLIDER: `${API_BASE_URL}/api/listings/slider`,
+    BASE: `/api/listings`,
+    SLIDER: `/api/listings/slider`,
   },
-  CONTACT: `${API_BASE_URL}/api/contact`,
+  CONTACT: `/api/contact`,
 };

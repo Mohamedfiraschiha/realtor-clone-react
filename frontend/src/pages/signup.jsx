@@ -30,7 +30,12 @@ export default function Signup() {
     try {
       const res = await fetch(API_ENDPOINTS.AUTH.SIGNUP, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        credentials: "include",
+        mode: "cors",
         body: JSON.stringify({ fullName, email, password }),
       });
       if (res.ok) {

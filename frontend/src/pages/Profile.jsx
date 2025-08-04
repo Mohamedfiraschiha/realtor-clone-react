@@ -89,7 +89,7 @@ export default function Profile() {
   }
 
   async function onSubmit() {
-    const API_URL = "http://localhost:3000/api/user/profile";
+    const API_URL = `${API_ENDPOINTS.LISTINGS.BASE}/user/profile`;
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(API_URL, {

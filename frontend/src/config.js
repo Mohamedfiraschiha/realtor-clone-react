@@ -1,5 +1,5 @@
 // Base URL for API requests
-export const API_BASE_URL = 'https://realtor-clone-react-4ziu-fdely25nb-firas-projects-2065c173.vercel.app';
+export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3000';
 
 // API endpoints
 export const API_ENDPOINTS = {

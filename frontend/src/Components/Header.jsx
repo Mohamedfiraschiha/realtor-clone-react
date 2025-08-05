@@ -63,9 +63,15 @@ export default function Header() {
                 onClick={() => navigate("/offers")}
                 >Offers</li>
                       {isLoggedIn ? (
-                        <li className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
-                            pathMatchRoute("/profile") && "text-black border-b-red-500"
-                          }`} onClick={() => navigate("/profile")}>Profile</li>
+                        <>
+                          <li className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
+                              pathMatchRoute("/profile") && "text-black border-b-red-500"
+                            }`} onClick={() => navigate("/profile")}>Profile</li>
+                          <li className="cursor-pointer py-3 text-sm font-semibold text-gray-400 hover:text-black" 
+                              onClick={handleLogout}>
+                            Logout
+                          </li>
+                        </>
                       ) : (
                         <li className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
                           pathMatchRoute("/sign-in") && "text-black border-b-red-500"

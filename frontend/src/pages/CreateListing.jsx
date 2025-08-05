@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FcHome } from "react-icons/fc";
+
 import { API_ENDPOINTS } from "../config";
 import Spinner from "../Components/Spinner";
 
@@ -47,9 +47,9 @@ export default function CreateListing() {
         method: "POST",
         body: form,
       });
-      const data = await res.json();
-      if (!data.secure_url) throw new Error("Image upload failed");
-      uploadedUrls.push(data.secure_url);
+      const result = await res.json();
+      if (!result.secure_url) throw new Error("Image upload failed");
+      uploadedUrls.push(result.secure_url);
     }
     return uploadedUrls;
   }

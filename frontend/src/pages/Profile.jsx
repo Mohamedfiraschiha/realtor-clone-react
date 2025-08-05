@@ -76,11 +76,6 @@ export default function Profile() {
     fetchListings();
   }, [navigate]);
 
-  function onLogout() {
-    toast.info("You have been logged out");
-    navigate("/");
-  }
-
   function onChange(e) {
     setFormData((prev) => ({
       ...prev,

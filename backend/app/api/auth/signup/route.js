@@ -2,8 +2,9 @@ import { findUserByEmail, createUser } from '../../../../lib/user';
 import { hashPassword, generateToken } from '../../../../lib/auth';
 import clientPromise from '../../../../lib/mongodb';
 import { NextResponse } from 'next/server';
+import { withCORS } from '../../../../lib/cors';
 
-export async function POST(request) {
+async function handleSignup(request) {
   try {
     const { fullName, email, password } = await request.json();
     
@@ -37,12 +38,7 @@ export async function POST(request) {
     return NextResponse.json(
       { token },
       { 
-        status: 201,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        }
+        status: 201
       }
     );
     
@@ -54,6 +50,8 @@ export async function POST(request) {
     );
   }
 }
+
+export const POST = withCORS(handleSignup);
 
 export async function OPTIONS() {
   return new Response(null, {

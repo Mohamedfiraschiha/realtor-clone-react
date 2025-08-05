@@ -1,7 +1,7 @@
 import { findUserByEmail, createUser } from '../../../../lib/user';
 import { hashPassword, generateToken } from '../../../../lib/auth';
 import clientPromise from '../../../../lib/mongodb';
-import { withCORS } from '../../../../lib/cors';
+import { NextResponse } from 'next/server';
 
 export async function POST(request) {
   try {
@@ -9,10 +9,10 @@ export async function POST(request) {
     
     if (!fullName || !email || !password) {
       console.log('❌ Signup: Missing fields');
-      return new Response(JSON.stringify({ message: 'Missing required fields' }), { 
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
-      });
+      return NextResponse.json(
+        { message: 'Missing required fields' },
+        { status: 400 }
+      );
     }
 
     const client = await clientPromise;
@@ -21,10 +21,10 @@ export async function POST(request) {
     const existing = await findUserByEmail(email);
     if (existing) {
       console.log('❌ Signup: User already exists:', email);
-      return new Response(JSON.stringify({ message: 'User already exists' }), { 
-        status: 409,
-        headers: { 'Content-Type': 'application/json' }
-      });
+      return NextResponse.json(
+        { message: 'User already exists' },
+        { status: 409 }
+      );
     }
     
     const hashed = await hashPassword(password);
@@ -34,27 +34,34 @@ export async function POST(request) {
     
     console.log('✅ Signup: User created successfully:', email);
     
-    return new Response(JSON.stringify({ token }), { 
-      status: 201,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return NextResponse.json(
+      { token },
+      { 
+        status: 201,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        }
+      }
+    );
     
   } catch (err) {
     console.error('❌ Signup error:', err);
-    return new Response(JSON.stringify({ message: 'Internal server error' }), { 
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return NextResponse.json(
+      { message: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
-export const OPTIONS = withCORS(() => 
-  new Response(null, { 
+export async function OPTIONS() {
+  return new Response(null, {
     status: 204,
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    }
-  })
-);
+    },
+  });
+}

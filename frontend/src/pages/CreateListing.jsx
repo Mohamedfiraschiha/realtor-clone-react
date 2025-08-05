@@ -93,7 +93,7 @@ export default function CreateListing() {
         body: JSON.stringify(listing),
       });
       if (!res.ok) throw new Error("Failed to create listing");
-      const data = await res.json();
+      await res.json(); // We don't need the response data
       toast.success("Listing created");
       navigate("/profile");
     } catch (error) {

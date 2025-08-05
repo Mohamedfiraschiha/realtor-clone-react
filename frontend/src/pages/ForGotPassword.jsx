@@ -6,7 +6,7 @@ import { API_ENDPOINTS } from "../config";
 export default function ForGotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   function onChange(e) {
     setEmail(e.target.value);
@@ -14,7 +14,7 @@ export default function ForGotPassword() {
 
   async function onSubmit(e) {
     e.preventDefault();
-    setLoading(true);
+    setIsLoading(true);
     setMessage("");
     try {
       const res = await fetch(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, {
@@ -27,7 +27,7 @@ export default function ForGotPassword() {
     } catch {
       setMessage("Network error. Please try again.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 

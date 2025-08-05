@@ -187,7 +187,7 @@ export default function EditListing() {
                 <img
                   key={idx}
                   src={typeof img === "string" ? img : URL.createObjectURL(img)}
-                  alt={`Listing image ${idx + 1}`}
+                  alt={`Listing ${idx + 1}`}
                   className="w-24 h-24 object-cover rounded"
                 />
               ))}

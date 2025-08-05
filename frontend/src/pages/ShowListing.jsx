@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "../Components/Spinner";
-import { FaMapMarkerAlt, FaShare } from "react-icons/fa";
+import { FaShare } from "react-icons/fa";
 import { register } from 'swiper/element/bundle';
 import "swiper/css/bundle";
 import { API_ENDPOINTS } from "../config";

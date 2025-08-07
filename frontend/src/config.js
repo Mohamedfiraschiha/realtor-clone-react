@@ -2,9 +2,20 @@
 const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost';
 const isDev = process.env.NODE_ENV === 'development' || isLocalhost;
 
-// In production, use relative URLs since both frontend and backend are on the same domain
-// In development, use the proxy set in package.json
-const API_BASE_URL = isDev ? '' : '';
+// Get the current hostname
+const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+
+// Determine the base URL for API requests
+let API_BASE_URL = '';
+
+if (isDev) {
+  // In development, use the proxy set in package.json
+  API_BASE_URL = '';
+} else if (hostname.includes('vercel.app')) {
+  // In Vercel production, use absolute URL to the backend
+  API_BASE_URL = 'https://realtor-clone-react.vercel.app';
+}
+// For production on the same domain, use relative URLs (empty string)
 
 const ENDPOINTS = {
   AUTH: {

@@ -2,15 +2,15 @@
   "version": 2,
   "builds": [
     {
+      "src": "backend/package.json",
+      "use": "@vercel/next"
+    },
+    {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "build"
       }
-    },
-    {
-      "src": "backend/package.json",
-      "use": "@vercel/next"
     }
   ],
   "routes": [
@@ -21,10 +21,6 @@
     {
       "src": "/(.*)",
       "dest": "/frontend/build/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/frontend/build/index.html"
     }
   ]
 }

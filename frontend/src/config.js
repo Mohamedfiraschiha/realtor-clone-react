@@ -1,14 +1,16 @@
-// Using window.location.origin for production and fallback to environment variable
-const getApiBaseUrl = () => {
-  // In production, use the full URL from environment variable
-  if (process.env.NODE_ENV === 'production') {
-    return 'https://realtor-clone-react-4ziu-fdely25nb-firas-projects-2065c173.vercel.app';
+// Configuration for different environments
+const config = {
+  development: {
+    API_BASE_URL: '' // Empty string will use relative URLs in development
+  },
+  production: {
+    API_BASE_URL: 'https://realtor-clone-react-4ziu-fdely25nb-firas-projects-2065c173.vercel.app'
   }
-  // In development, use the proxy set in package.json
-  return '';
 };
 
-const API_BASE_URL = getApiBaseUrl();
+// Determine the environment
+const env = typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'development' : 'production';
+const { API_BASE_URL } = config[env];
 
 export const API_ENDPOINTS = {
   AUTH: {
@@ -24,6 +26,7 @@ export const API_ENDPOINTS = {
   CONTACT: `${API_BASE_URL}/api/contact`,
 };
 
-// Log the API base URL for debugging
-console.log('Environment:', process.env.NODE_ENV);
-console.log('API Base URL:', API_BASE_URL);
+// Log the configuration for debugging
+console.log('Current Environment:', env);
+console.log('API Base URL:', API_BASE_URL || '(using relative URLs)');
+console.log('Full API Endpoints:', API_ENDPOINTS);

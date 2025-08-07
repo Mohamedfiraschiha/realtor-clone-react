@@ -2,11 +2,9 @@
 const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost';
 const isDev = process.env.NODE_ENV === 'development' || isLocalhost;
 
-// For production, use relative URLs since both frontend and backend are on the same domain
+// In production, use relative URLs since both frontend and backend are on the same domain
+// In development, use the proxy set in package.json
 const API_BASE_URL = isDev ? '' : '';
-
-// If you need to use a different domain for API in production, uncomment and set this:
-// const API_BASE_URL = isDev ? '' : 'https://realtor-clone-react-4ziu.vercel.app';
 
 const ENDPOINTS = {
   AUTH: {

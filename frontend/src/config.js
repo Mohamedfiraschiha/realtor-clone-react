@@ -12,9 +12,13 @@ if (isDev) {
   // In development, use the proxy set in package.json
   API_BASE_URL = '';
 } else if (hostname.includes('vercel.app')) {
-  // In Vercel production, frontend and backend are served from the same deployment/domain via vercel.json routes.
-  // Use relative URLs to avoid CORS and domain mismatches.
-  API_BASE_URL = '';
+  // If this is the separate frontend deployment, point to the backend project domain to avoid 404s.
+  if (hostname.startsWith('realtor-clone-react-4ziu')) {
+    API_BASE_URL = 'https://realtor-clone-react.vercel.app';
+  } else {
+    // Otherwise prefer same-origin
+    API_BASE_URL = '';
+  }
 }
 // For production on the same domain, use relative URLs (empty string)
 

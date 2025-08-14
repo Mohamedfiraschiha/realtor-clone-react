@@ -1,4 +1,5 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
   "builds": [
     {
@@ -13,34 +14,14 @@
       }
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/backend/app/api/$1"
+      "source": "/api/(.*)",
+      "destination": "/backend/app/api/$1"
     },
     {
-      "src": "^/static/(.*)",
-      "dest": "/frontend/build/static/$1"
-    },
-    {
-      "src": "^/favicon.ico",
-      "dest": "/frontend/build/favicon.ico"
-    },
-    {
-      "src": "^/manifest.json",
-      "dest": "/frontend/build/manifest.json"
-    },
-    {
-      "src": "^/logo192.png",
-      "dest": "/frontend/build/logo192.png"
-    },
-    {
-      "src": "^/logo512.png",
-      "dest": "/frontend/build/logo512.png"
-    },
-    {
-      "src": "^/(.*)",
-      "dest": "/frontend/build/index.html"
+      "source": "/(.*)",
+      "destination": "/frontend/build/index.html"
     }
   ]
 }

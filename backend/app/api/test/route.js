@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
 
+export async function GET() {
+  return NextResponse.json({ ok: true, route: 'GET /api/test' }, { status: 200 });
+}
+
 export async function POST(request) {
   console.log('✅ Test endpoint hit');
   return NextResponse.json({ message: 'Test successful' }, { status: 200 });

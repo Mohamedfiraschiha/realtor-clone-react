@@ -32,7 +32,7 @@ export default function Slider() {
   }, []);
 
   if (loading) return <Spinner />;
-  if (!listings || listings.filter(l => l.images && l.images.length > 0).length === 0) {
+  if (!listings || !Array.isArray(listings) || listings.filter(l => l.images && l.images.length > 0).length === 0) {
     return <div className="text-center py-8 text-gray-500">No featured listings available.</div>;
   }
 

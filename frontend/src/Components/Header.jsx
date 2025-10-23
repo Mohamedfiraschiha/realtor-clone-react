@@ -62,6 +62,11 @@ export default function Header() {
                 }`} 
                 onClick={() => navigate("/offers")}
                 >Offers</li>
+                      <li  className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
+                  pathMatchRoute("/map-view") && "text-black border-b-red-500"
+                }`} 
+                onClick={() => navigate("/map-view")}
+                >Map View</li>
                       {isLoggedIn ? (
                         <>
                           <li className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${

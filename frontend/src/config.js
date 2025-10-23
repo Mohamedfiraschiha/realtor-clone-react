@@ -8,6 +8,9 @@ const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
 // Determine the base URL for API requests
 let API_BASE_URL = '';
 
+// Highest priority: explicit env override provided at build time
+const ENV_BASE = typeof process !== 'undefined' ? process.env.REACT_APP_API_BASE_URL : undefined;
+
 if (isDev) {
   // In development, use the proxy set in package.json
   API_BASE_URL = '';
@@ -20,6 +23,12 @@ if (isDev) {
     API_BASE_URL = '';
   }
 }
+
+// Allow env to override in production if provided
+if (!isDev && ENV_BASE) {
+  API_BASE_URL = ENV_BASE;
+}
+
 // For production on the same domain, use relative URLs (empty string)
 
 const ENDPOINTS = {
@@ -29,9 +38,18 @@ const ENDPOINTS = {
     FORGOT_PASSWORD: '/api/auth/forgot-password',
     RESET_PASSWORD: '/api/auth/reset-password',
   },
+  USER: {
+    PROFILE: '/api/user/profile',
+  },
   LISTINGS: {
     BASE: '/api/listings',
     SLIDER: '/api/listings/slider',
+    SEARCH: '/api/listings/search',
+  },
+  CHAT: {
+    MESSAGES: '/api/chat/messages',
+    CONVERSATIONS: '/api/chat/conversations',
+    READ: '/api/chat/read',
   },
   CONTACT: '/api/contact',
 };

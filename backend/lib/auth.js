@@ -14,4 +14,14 @@ export async function comparePassword(password, hash) {
 export function generateToken(user) {
   // Only include non-sensitive info in the token
   return jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
-} 
+}
+
+export function verifyToken(token) {
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    return { userId: decoded.id, email: decoded.email };
+  } catch (error) {
+    console.error('Token verification failed:', error.message);
+    return null;
+  }
+}

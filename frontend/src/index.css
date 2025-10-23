@@ -28,3 +28,54 @@ html::-webkit-scrollbar {
 html {
   scrollbar-width: none;
 }
+
+/* === Leaflet Map Custom Styles === */
+.custom-marker {
+  background: transparent;
+  border: none;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  padding: 0;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  min-width: 280px;
+}
+
+.custom-popup .leaflet-popup-close-button {
+  display: none;
+}
+
+/* Cluster marker styles */
+.marker-cluster-small {
+  background-color: rgba(59, 130, 246, 0.6);
+}
+
+.marker-cluster-small div {
+  background-color: rgba(59, 130, 246, 0.8);
+  color: white;
+  font-weight: bold;
+}
+
+.marker-cluster-medium {
+  background-color: rgba(16, 185, 129, 0.6);
+}
+
+.marker-cluster-medium div {
+  background-color: rgba(16, 185, 129, 0.8);
+  color: white;
+  font-weight: bold;
+}
+
+.marker-cluster-large {
+  background-color: rgba(239, 68, 68, 0.6);
+}
+
+.marker-cluster-large div {
+  background-color: rgba(239, 68, 68, 0.8);
+  color: white;
+  font-weight: bold;
+}

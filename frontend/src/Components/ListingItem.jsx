@@ -1,29 +1,72 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { MdLocationOn, MdEdit } from "react-icons/md";
+import { FaTrash } from "react-icons/fa";
+import Moment from "react-moment";
 
-export default function ListingItem({ listing, onEdit, onDelete, onShow }) {
+export default function ListingItem({ listing, id, onEdit, onDelete }) {
   return (
-    <li className="border p-4 rounded mb-4 flex flex-col">
-      <div className="flex-1">
-        {listing.images && listing.images.length > 0 && (
-          <img
-            src={listing.images[0]}
-            alt={listing.name || 'Listing'}
-            className="w-full h-40 object-cover rounded mb-2"
-          />
-        )}
-        <h3 className="text-lg font-bold">{listing.name || listing.title || 'No Title'}</h3>
-        <p className="text-gray-700">Price: ${listing.regularPrice || listing.price || 'N/A'}</p>
-        {listing.address && <p className="text-gray-500 text-sm">Address: {listing.address}</p>}
-        <div className="flex gap-2 text-sm text-gray-600 mt-1">
-          <span>Beds: {listing.bedrooms ?? '-'}</span>
-          <span>Baths: {listing.bathrooms ?? '-'}</span>
+    <li className="relative bg-white flex flex-col justify-between items-center shadow-md hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-150 m-[10px]">
+      <Link className="contents" to={`/show-listing/${id}`}>
+        <img
+          className="h-[170px] w-full object-cover hover:scale-105 transition-scale duration-200 ease-in"
+          loading="lazy"
+          src={listing.images?.[0] || listing.imgUrls?.[0]}
+          alt={listing.name}
+        />
+        <Moment
+          className="absolute top-2 left-2 bg-[#3377cc] text-white uppercase text-xs font-semibold rounded-md px-2 py-1 shadow-lg"
+          fromNow
+        >
+          {listing.timestamp?.toDate?.() || listing.createdAt}
+        </Moment>
+        <div className="w-full p-[10px]">
+          <div className="flex items-center space-x-1">
+            <MdLocationOn className="h-4 w-4 text-green-600" />
+            <p className="font-semibold text-sm mb-[2px] text-gray-600 truncate">
+              {listing.address}
+            </p>
+          </div>
+          <p className="font-semibold m-0 text-xl truncate">{listing.name}</p>
+          <p className="text-[#457b9d] mt-2 font-semibold">
+            $
+            {listing.offer
+              ? listing.discountedPrice
+                  ?.toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              : listing.regularPrice
+                  ?.toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            {listing.type === "rent" && " / month"}
+          </p>
+          <div className="flex items-center mt-[10px] space-x-3">
+            <div className="flex items-center space-x-1">
+              <p className="font-bold text-xs">
+                {listing.bedrooms > 1 ? `${listing.bedrooms} Beds` : "1 Bed"}
+              </p>
+            </div>
+            <div className="flex items-center space-x-1">
+              <p className="font-bold text-xs">
+                {listing.bathrooms > 1
+                  ? `${listing.bathrooms} Baths`
+                  : "1 Bath"}
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="flex mt-2 space-x-2">
-        <button onClick={onShow} className="bg-green-500 text-white px-3 py-1 rounded">Show</button>
-        <button onClick={onEdit} className="bg-blue-500 text-white px-3 py-1 rounded">Edit</button>
-        <button onClick={onDelete} className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-      </div>
+      </Link>
+      {onDelete && (
+        <FaTrash
+          className="absolute bottom-2 right-2 h-[14px] cursor-pointer text-red-500"
+          onClick={() => onDelete(listing.id || listing._id)}
+        />
+      )}
+      {onEdit && (
+        <MdEdit
+          className="absolute bottom-2 right-7 h-4 cursor-pointer "
+          onClick={() => onEdit(listing.id || listing._id)}
+        />
+      )}
     </li>
   );
-} 
+}

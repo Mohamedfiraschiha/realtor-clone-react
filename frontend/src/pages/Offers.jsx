@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import Spinner from "../Components/Spinner";
 import { API_ENDPOINTS } from "../config";
 import ListingItem from "../Components/ListingItem";
+import { FaTag, FaFilter } from "react-icons/fa";
 
 export default function Offers() {
   const [listings, setListings] = useState([]);
@@ -73,14 +74,39 @@ export default function Offers() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-3">
-      <h1 className="text-3xl text-center mt-6 font-bold mb-6">Offers</h1>
-      {loading ? (
-        <Spinner />
-      ) : listings && listings.length > 0 ? (
-        <>
-          <main>
-            <ul className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header Section */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="bg-slate-100 rounded-full p-4">
+                <FaTag className="text-3xl text-slate-600" />
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold text-gray-900">Special Offers</h1>
+                <p className="text-gray-600 mt-2">
+                  {listings.length > 0 ? `${listings.length} properties with exclusive deals` : 'No offers available'}
+                </p>
+              </div>
+            </div>
+            <button className="hidden md:flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 transition-colors duration-300">
+              <FaFilter />
+              Filters
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <Spinner />
+          </div>
+        ) : listings && listings.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
               {listings.map((listing) => (
                 <ListingItem
                   key={listing._id}
@@ -91,22 +117,26 @@ export default function Offers() {
                   onDelete={() => handleDelete(listing._id)}
                 />
               ))}
-            </ul>
-          </main>
-          {hasMore && (
-            <div className="flex justify-center items-center">
-              <button
-                onClick={onFetchMoreListings}
-                className="bg-white px-3 py-1.5 text-gray-700 border border-gray-300 mb-6 mt-6 hover:border-slate-600 rounded transition duration-150 ease-in-out"
-              >
-                Load more
-              </button>
             </div>
-          )}
-        </>
-      ) : (
-        <p>There are no current offers</p>
-      )}
+            {hasMore && (
+              <div className="flex justify-center">
+                <button
+                  onClick={onFetchMoreListings}
+                  className="px-8 py-3 bg-white text-slate-900 border-2 border-slate-900 rounded-lg font-semibold hover:bg-slate-900 hover:text-white transition-all duration-300"
+                >
+                  Load More Properties
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center py-20">
+            <FaTag className="text-6xl text-gray-300 mx-auto mb-4" />
+            <h3 className="text-2xl font-semibold text-gray-900 mb-2">No Offers Available</h3>
+            <p className="text-gray-600">Check back later for exclusive deals on properties</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

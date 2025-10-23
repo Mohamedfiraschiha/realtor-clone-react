@@ -5,7 +5,7 @@ import { FaShare } from "react-icons/fa";
 import { register } from 'swiper/element/bundle';
 import "swiper/css/bundle";
 import { API_ENDPOINTS } from "../config";
-import Contact from "../Components/Contact";
+import ContactButton from "../Components/ContactButton";
 
 
 register(); // Register Swiper custom elements
@@ -14,7 +14,6 @@ export default function ShowListing() {
   const { id } = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [contact, setContact] = useState(false);
   const swiperRef = useRef(null);
   const [shareLinkCopied, setShareLinkCopied] = useState(false);
 
@@ -34,6 +33,26 @@ export default function ShowListing() {
     }
     fetchListing();
   }, [id]);
+
+  // Fetch owner user ID from email
+  const [ownerId, setOwnerId] = useState(null);
+  useEffect(() => {
+    async function fetchOwner() {
+      if (!listing?.userEmail) return;
+      try {
+        const res = await fetch(`${API_ENDPOINTS.USERS.BASE}?email=${listing.userEmail}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user) {
+            setOwnerId(data.user._id);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching owner:", error);
+      }
+    }
+    fetchOwner();
+  }, [listing]);
 
   useEffect(() => {
     if (swiperRef.current && listing && listing.images && listing.images.length > 0) {
@@ -122,15 +141,15 @@ export default function ShowListing() {
         </div>
 
         {/* Contact Owner */}
-        {!contact ? (
-          <button
-            onClick={() => setContact(true)}
-            className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition"
-          >
-            Contact Owner
-          </button>
+        {ownerId ? (
+          <ContactButton
+            ownerId={ownerId}
+            ownerName={listing.userName || listing.userEmail || "Owner"}
+            listingId={listing._id}
+            listingName={listing.name}
+          />
         ) : (
-          <Contact userEmail={listing.userEmail} />
+          <div className="text-center text-gray-500">Loading owner information...</div>
         )}
       </div>
     </main>

@@ -54,8 +54,8 @@ export default function CreateListing() {
         )}&limit=1`,
         {
           headers: {
-            'User-Agent': 'RealtorCloneApp/1.0'
-          }
+            "User-Agent": "RealtorCloneApp/1.0",
+          },
         }
       );
 
@@ -87,10 +87,13 @@ export default function CreateListing() {
       const form = new FormData();
       form.append("file", files[i]);
       form.append("upload_preset", "react-uploads");
-      const res = await fetch("https://api.cloudinary.com/v1_1/dj0xaaqox/image/upload", {
-        method: "POST",
-        body: form,
-      });
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dj0xaaqox/image/upload",
+        {
+          method: "POST",
+          body: form,
+        }
+      );
       const result = await res.json();
       if (!result.secure_url) throw new Error("Image upload failed");
       uploadedUrls.push(result.secure_url);
@@ -124,8 +127,8 @@ export default function CreateListing() {
             )}&limit=1`,
             {
               headers: {
-                'User-Agent': 'RealtorCloneApp/1.0'
-              }
+                "User-Agent": "RealtorCloneApp/1.0",
+              },
             }
           );
           const data = await response.json();
@@ -135,7 +138,9 @@ export default function CreateListing() {
               lng: parseFloat(data[0].lon),
             };
           } else {
-            toast.warning("Could not geocode address. Listing will not appear on map.");
+            toast.warning(
+              "Could not geocode address. Listing will not appear on map."
+            );
           }
         } catch (error) {
           console.error("Geocoding error:", error);
@@ -178,11 +183,12 @@ export default function CreateListing() {
     }
   }
 
-  if (loading) return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <Spinner />
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <Spinner />
+      </div>
+    );
 
   const {
     type,
@@ -209,8 +215,12 @@ export default function CreateListing() {
               <FaHome className="text-3xl text-slate-600" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-gray-900">Create Listing</h1>
-              <p className="text-gray-600 mt-2">List your property for sale or rent</p>
+              <h1 className="text-4xl font-bold text-gray-900">
+                Create Listing
+              </h1>
+              <p className="text-gray-600 mt-2">
+                List your property for sale or rent
+              </p>
             </div>
           </div>
         </div>
@@ -218,8 +228,10 @@ export default function CreateListing() {
 
       {/* Form Section */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <form onSubmit={onSubmit} className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-          
+        <form
+          onSubmit={onSubmit}
+          className="bg-white rounded-xl shadow-sm border border-gray-100 p-8"
+        >
           {/* Property Type */}
           <div className="mb-8">
             <label className="block text-sm font-semibold text-gray-700 mb-3">
@@ -424,11 +436,16 @@ export default function CreateListing() {
                 </p>
               </div>
             </div>
-          ) : address && (
-            <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-3 text-yellow-700">
-              <FaMapMarkerAlt className="text-yellow-600 text-xl" />
-              <p className="text-sm">Click "Find Location on Map" to make this property visible on the map</p>
-            </div>
+          ) : (
+            address && (
+              <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-3 text-yellow-700">
+                <FaMapMarkerAlt className="text-yellow-600 text-xl" />
+                <p className="text-sm">
+                  Click "Find Location on Map" to make this property visible on
+                  the map
+                </p>
+              </div>
+            )
           )}
 
           {/* Description */}

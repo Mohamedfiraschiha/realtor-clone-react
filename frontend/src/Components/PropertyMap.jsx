@@ -9,7 +9,8 @@ import { FaBed, FaBath, FaMapMarkerAlt, FaStreetView } from "react-icons/fa";
 // Fix for default marker icon in React-Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
+  iconRetinaUrl:
+    "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
   iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
   shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
 });
@@ -74,8 +75,8 @@ function SearchRadius({ center, radius, onRadiusChange }) {
   return null;
 }
 
-export default function PropertyMap({ 
-  listings = [], 
+export default function PropertyMap({
+  listings = [],
   center = [37.7749, -122.4194], // Default to San Francisco
   zoom = 12,
   height = "500px",
@@ -135,20 +136,24 @@ export default function PropertyMap({
                     className="w-full h-32 object-cover rounded-md mb-2"
                   />
                 )}
-                
+
                 {/* Property Details */}
-                <h3 className="font-bold text-lg mb-1 line-clamp-1">{listing.name}</h3>
+                <h3 className="font-bold text-lg mb-1 line-clamp-1">
+                  {listing.name}
+                </h3>
                 <p className="text-sm text-gray-600 mb-2 line-clamp-1">
                   <FaMapMarkerAlt className="inline mr-1" />
                   {listing.address}
                 </p>
-                
+
                 {/* Price */}
                 <p className="text-xl font-bold text-blue-600 mb-2">
                   ${price?.toLocaleString()}
-                  {listing.type === "rent" && <span className="text-sm"> /month</span>}
+                  {listing.type === "rent" && (
+                    <span className="text-sm"> /month</span>
+                  )}
                 </p>
-                
+
                 {/* Beds & Baths */}
                 <div className="flex gap-4 text-sm text-gray-700 mb-2">
                   <span>
@@ -157,7 +162,8 @@ export default function PropertyMap({
                   </span>
                   <span>
                     <FaBath className="inline mr-1" />
-                    {listing.bathrooms} {listing.bathrooms === 1 ? "Bath" : "Baths"}
+                    {listing.bathrooms}{" "}
+                    {listing.bathrooms === 1 ? "Bath" : "Baths"}
                   </span>
                 </div>
 
@@ -170,7 +176,12 @@ export default function PropertyMap({
                     View Details
                   </button>
                   <button
-                    onClick={() => openStreetView(listing.geolocation.lat, listing.geolocation.lng)}
+                    onClick={() =>
+                      openStreetView(
+                        listing.geolocation.lat,
+                        listing.geolocation.lng
+                      )
+                    }
                     className="bg-green-600 text-white px-3 py-2 rounded text-sm hover:bg-green-700"
                     title="Street View"
                   >
@@ -190,7 +201,10 @@ export default function PropertyMap({
   };
 
   return (
-    <div style={{ height, width: "100%" }} className="rounded-lg overflow-hidden shadow-lg">
+    <div
+      style={{ height, width: "100%" }}
+      className="rounded-lg overflow-hidden shadow-lg"
+    >
       <MapContainer
         center={mapCenter}
         zoom={mapZoom}
@@ -212,7 +226,7 @@ export default function PropertyMap({
         /> */}
 
         <ChangeView center={mapCenter} zoom={mapZoom} />
-        
+
         {/* Search Radius Circle */}
         {enableSearchRadius && searchRadius && (
           <SearchRadius center={mapCenter} radius={searchRadius} />

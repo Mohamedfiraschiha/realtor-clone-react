@@ -18,7 +18,7 @@ function App() {
     <>
       <Router>
         <SocketProvider>
-          <Header/>
+          <Header />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/offers" element={<Offers />} />

@@ -11,31 +11,43 @@ export default function Home() {
   const [rentListings, setRentListings] = useState(null);
   const [saleListings, setSaleListings] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({ total: 0, forRent: 0, forSale: 0, offers: 0 });
+  const [stats, setStats] = useState({
+    total: 0,
+    forRent: 0,
+    forSale: 0,
+    offers: 0,
+  });
 
   useEffect(() => {
     async function fetchAllListings() {
       try {
         // Offers
-        const offerRes = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}?offer=true&limit=4`);
+        const offerRes = await fetch(
+          `${API_ENDPOINTS.LISTINGS.BASE}?offer=true&limit=4`
+        );
         const offers = await offerRes.json();
         setOfferListings(offers);
 
         // Rent
-        const rentRes = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}?type=rent&limit=4`);
+        const rentRes = await fetch(
+          `${API_ENDPOINTS.LISTINGS.BASE}?type=rent&limit=4`
+        );
         const rents = await rentRes.json();
         setRentListings(rents);
 
         // Sale
-        const saleRes = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}?type=sale&limit=4`);
+        const saleRes = await fetch(
+          `${API_ENDPOINTS.LISTINGS.BASE}?type=sale&limit=4`
+        );
         const sales = await saleRes.json();
         setSaleListings(sales);
 
         // Calculate stats
         setStats({
-          total: (Array.isArray(offers) ? offers.length : 0) + 
-                 (Array.isArray(rents) ? rents.length : 0) + 
-                 (Array.isArray(sales) ? sales.length : 0),
+          total:
+            (Array.isArray(offers) ? offers.length : 0) +
+            (Array.isArray(rents) ? rents.length : 0) +
+            (Array.isArray(sales) ? sales.length : 0),
           forRent: Array.isArray(rents) ? rents.length : 0,
           forSale: Array.isArray(sales) ? sales.length : 0,
           offers: Array.isArray(offers) ? offers.length : 0,
@@ -61,7 +73,7 @@ export default function Home() {
     <div className="bg-gray-50 min-h-screen">
       {/* Hero Slider */}
       <Slider />
-      
+
       {/* Advanced Search Component */}
       <div className="relative -mt-20 z-10">
         <AdvancedSearch />
@@ -69,14 +81,17 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        
         {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500 text-sm font-medium mb-1">Total Properties</p>
-                <h3 className="text-3xl font-bold text-gray-900">{stats.total}+</h3>
+                <p className="text-gray-500 text-sm font-medium mb-1">
+                  Total Properties
+                </p>
+                <h3 className="text-3xl font-bold text-gray-900">
+                  {stats.total}+
+                </h3>
               </div>
               <div className="bg-slate-100 rounded-full p-4">
                 <FaHome className="text-2xl text-slate-600" />
@@ -87,8 +102,12 @@ export default function Home() {
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500 text-sm font-medium mb-1">For Rent</p>
-                <h3 className="text-3xl font-bold text-gray-900">{stats.forRent}</h3>
+                <p className="text-gray-500 text-sm font-medium mb-1">
+                  For Rent
+                </p>
+                <h3 className="text-3xl font-bold text-gray-900">
+                  {stats.forRent}
+                </h3>
               </div>
               <div className="bg-slate-100 rounded-full p-4">
                 <FaKey className="text-2xl text-slate-600" />
@@ -99,8 +118,12 @@ export default function Home() {
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500 text-sm font-medium mb-1">For Sale</p>
-                <h3 className="text-3xl font-bold text-gray-900">{stats.forSale}</h3>
+                <p className="text-gray-500 text-sm font-medium mb-1">
+                  For Sale
+                </p>
+                <h3 className="text-3xl font-bold text-gray-900">
+                  {stats.forSale}
+                </h3>
               </div>
               <div className="bg-slate-100 rounded-full p-4">
                 <FaChartLine className="text-2xl text-slate-600" />
@@ -111,8 +134,12 @@ export default function Home() {
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500 text-sm font-medium mb-1">Special Offers</p>
-                <h3 className="text-3xl font-bold text-gray-900">{stats.offers}</h3>
+                <p className="text-gray-500 text-sm font-medium mb-1">
+                  Special Offers
+                </p>
+                <h3 className="text-3xl font-bold text-gray-900">
+                  {stats.offers}
+                </h3>
               </div>
               <div className="bg-slate-100 rounded-full p-4">
                 <FaTag className="text-2xl text-slate-600" />
@@ -129,9 +156,11 @@ export default function Home() {
                 <h2 className="text-3xl font-bold text-gray-900 mb-2">
                   Special Offers
                 </h2>
-                <p className="text-gray-600">Exclusive deals on premium properties</p>
+                <p className="text-gray-600">
+                  Exclusive deals on premium properties
+                </p>
               </div>
-              <Link 
+              <Link
                 to="/offers"
                 className="px-6 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 transition-colors duration-300 shadow-sm"
               >
@@ -160,7 +189,7 @@ export default function Home() {
                 </h2>
                 <p className="text-gray-600">Find your ideal rental property</p>
               </div>
-              <Link 
+              <Link
                 to="/category/rent"
                 className="px-6 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 transition-colors duration-300 shadow-sm"
               >
@@ -189,7 +218,7 @@ export default function Home() {
                 </h2>
                 <p className="text-gray-600">Discover your dream home today</p>
               </div>
-              <Link 
+              <Link
                 to="/category/sale"
                 className="px-6 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 transition-colors duration-300 shadow-sm"
               >
@@ -210,9 +239,12 @@ export default function Home() {
 
         {/* CTA Section */}
         <div className="bg-slate-900 rounded-2xl p-12 text-center text-white shadow-lg">
-          <h2 className="text-4xl font-bold mb-4">Ready to Find Your Perfect Property?</h2>
+          <h2 className="text-4xl font-bold mb-4">
+            Ready to Find Your Perfect Property?
+          </h2>
           <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-            Browse thousands of properties or list your own. Start your real estate journey today.
+            Browse thousands of properties or list your own. Start your real
+            estate journey today.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Link

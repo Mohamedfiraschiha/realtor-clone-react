@@ -1,13 +1,22 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaSearch, FaBed, FaBath, FaDollarSign, FaHome, FaMapMarkerAlt, FaSave, FaFilter } from "react-icons/fa";
+import {
+  FaSearch,
+  FaBed,
+  FaBath,
+  FaDollarSign,
+  FaHome,
+  FaMapMarkerAlt,
+  FaSave,
+  FaFilter,
+} from "react-icons/fa";
 import { toast } from "react-toastify";
 
 export default function AdvancedSearch() {
   const navigate = useNavigate();
   const [showFilters, setShowFilters] = useState(false);
   const [savedSearches, setSavedSearches] = useState([]);
-  
+
   const [filters, setFilters] = useState({
     location: "",
     type: "all",
@@ -38,7 +47,7 @@ export default function AdvancedSearch() {
   // Handle search submission
   const handleSearch = (e) => {
     e.preventDefault();
-    
+
     // Build query string
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
@@ -86,7 +95,10 @@ export default function AdvancedSearch() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
       {/* Main Search Bar */}
-      <form onSubmit={handleSearch} className="bg-white rounded-lg shadow-lg p-6">
+      <form
+        onSubmit={handleSearch}
+        className="bg-white rounded-lg shadow-lg p-6"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
           {/* Location Search */}
           <div className="relative">

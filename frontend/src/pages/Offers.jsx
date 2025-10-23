@@ -15,7 +15,9 @@ export default function Offers() {
     async function fetchListings() {
       try {
         setLoading(true);
-        const res = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}?offer=true&limit=8`);
+        const res = await fetch(
+          `${API_ENDPOINTS.LISTINGS.BASE}?offer=true&limit=8`
+        );
         if (!res.ok) throw new Error("Network response was not ok");
         const data = await res.json();
         setListings(data);
@@ -37,7 +39,9 @@ export default function Offers() {
   async function onFetchMoreListings() {
     try {
       setLoading(true);
-      const res = await fetch(`${API_ENDPOINTS.LISTINGS.BASE}?offer=true&limit=4&last=${lastId}`);
+      const res = await fetch(
+        `${API_ENDPOINTS.LISTINGS.BASE}?offer=true&limit=4&last=${lastId}`
+      );
       if (!res.ok) throw new Error("Network response was not ok");
       const data = await res.json();
       setListings((prev) => [...prev, ...data]);
@@ -62,7 +66,8 @@ export default function Offers() {
     window.location.href = `/edit-listing/${id}`;
   };
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this listing?")) return;
+    if (!window.confirm("Are you sure you want to delete this listing?"))
+      return;
     try {
       const res = await fetch(`/api/listings/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete listing");
@@ -84,9 +89,13 @@ export default function Offers() {
                 <FaTag className="text-3xl text-slate-600" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold text-gray-900">Special Offers</h1>
+                <h1 className="text-4xl font-bold text-gray-900">
+                  Special Offers
+                </h1>
                 <p className="text-gray-600 mt-2">
-                  {listings.length > 0 ? `${listings.length} properties with exclusive deals` : 'No offers available'}
+                  {listings.length > 0
+                    ? `${listings.length} properties with exclusive deals`
+                    : "No offers available"}
                 </p>
               </div>
             </div>
@@ -132,8 +141,12 @@ export default function Offers() {
         ) : (
           <div className="text-center py-20">
             <FaTag className="text-6xl text-gray-300 mx-auto mb-4" />
-            <h3 className="text-2xl font-semibold text-gray-900 mb-2">No Offers Available</h3>
-            <p className="text-gray-600">Check back later for exclusive deals on properties</p>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+              No Offers Available
+            </h3>
+            <p className="text-gray-600">
+              Check back later for exclusive deals on properties
+            </p>
           </div>
         )}
       </div>

@@ -15,7 +15,7 @@ export default function MapView() {
   const [selectedListing, setSelectedListing] = useState(null);
   const [mapCenter, setMapCenter] = useState([37.7749, -122.4194]);
   const [showFilters, setShowFilters] = useState(false);
-  
+
   const [filters, setFilters] = useState({
     enableSearchRadius: false,
     searchRadius: 5,
@@ -27,21 +27,28 @@ export default function MapView() {
       setLoading(true);
       try {
         const queryString = searchParams.toString();
-        const url = queryString 
+        const url = queryString
           ? `${API_ENDPOINTS.LISTINGS.SEARCH}?${queryString}`
           : `${API_ENDPOINTS.LISTINGS.BASE}`;
-        
+
         const res = await fetch(url);
         const data = await res.json();
-        
+
         if (res.ok) {
-          const listingsData = Array.isArray(data.listings) ? data.listings : data;
+          const listingsData = Array.isArray(data.listings)
+            ? data.listings
+            : data;
           setListings(listingsData);
-          
+
           // Set initial map center to first listing with geolocation
-          const firstWithGeo = listingsData.find(l => l.geolocation?.lat && l.geolocation?.lng);
+          const firstWithGeo = listingsData.find(
+            (l) => l.geolocation?.lat && l.geolocation?.lng
+          );
           if (firstWithGeo) {
-            setMapCenter([firstWithGeo.geolocation.lat, firstWithGeo.geolocation.lng]);
+            setMapCenter([
+              firstWithGeo.geolocation.lat,
+              firstWithGeo.geolocation.lng,
+            ]);
           }
         } else {
           toast.error(data.message || "Failed to fetch listings");
@@ -58,7 +65,7 @@ export default function MapView() {
   }, [searchParams]);
 
   const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   if (loading) return <Spinner />;
@@ -71,7 +78,8 @@ export default function MapView() {
           <div>
             <h1 className="text-2xl font-bold">Map View</h1>
             <p className="text-gray-600">
-              {listings.length} {listings.length === 1 ? "property" : "properties"} found
+              {listings.length}{" "}
+              {listings.length === 1 ? "property" : "properties"} found
             </p>
           </div>
 
@@ -120,7 +128,9 @@ export default function MapView() {
                   type="checkbox"
                   id="clustering"
                   checked={filters.enableClustering}
-                  onChange={(e) => handleFilterChange("enableClustering", e.target.checked)}
+                  onChange={(e) =>
+                    handleFilterChange("enableClustering", e.target.checked)
+                  }
                   className="w-5 h-5 text-blue-600 rounded"
                 />
                 <label htmlFor="clustering" className="font-medium">
@@ -134,7 +144,9 @@ export default function MapView() {
                   type="checkbox"
                   id="searchRadius"
                   checked={filters.enableSearchRadius}
-                  onChange={(e) => handleFilterChange("enableSearchRadius", e.target.checked)}
+                  onChange={(e) =>
+                    handleFilterChange("enableSearchRadius", e.target.checked)
+                  }
                   className="w-5 h-5 text-blue-600 rounded"
                 />
                 <label htmlFor="searchRadius" className="font-medium">
@@ -153,7 +165,9 @@ export default function MapView() {
                     min="1"
                     max="50"
                     value={filters.searchRadius}
-                    onChange={(e) => handleFilterChange("searchRadius", Number(e.target.value))}
+                    onChange={(e) =>
+                      handleFilterChange("searchRadius", Number(e.target.value))
+                    }
                     className="w-full"
                   />
                 </div>
@@ -192,12 +206,20 @@ export default function MapView() {
                     key={listing._id}
                     onClick={() => {
                       setSelectedListing(listing);
-                      if (listing.geolocation?.lat && listing.geolocation?.lng) {
-                        setMapCenter([listing.geolocation.lat, listing.geolocation.lng]);
+                      if (
+                        listing.geolocation?.lat &&
+                        listing.geolocation?.lng
+                      ) {
+                        setMapCenter([
+                          listing.geolocation.lat,
+                          listing.geolocation.lng,
+                        ]);
                       }
                     }}
                     className={`cursor-pointer transition transform hover:scale-105 ${
-                      selectedListing?._id === listing._id ? "ring-2 ring-blue-500 rounded-lg" : ""
+                      selectedListing?._id === listing._id
+                        ? "ring-2 ring-blue-500 rounded-lg"
+                        : ""
                     }`}
                   >
                     <ListingItem listing={listing} id={listing._id} />

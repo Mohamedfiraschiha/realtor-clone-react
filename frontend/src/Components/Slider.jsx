@@ -32,8 +32,16 @@ export default function Slider() {
   }, []);
 
   if (loading) return <Spinner />;
-  if (!listings || !Array.isArray(listings) || listings.filter(l => l.images && l.images.length > 0).length === 0) {
-    return <div className="text-center py-8 text-gray-500">No featured listings available.</div>;
+  if (
+    !listings ||
+    !Array.isArray(listings) ||
+    listings.filter((l) => l.images && l.images.length > 0).length === 0
+  ) {
+    return (
+      <div className="text-center py-8 text-gray-500">
+        No featured listings available.
+      </div>
+    );
   }
 
   return (
@@ -46,7 +54,7 @@ export default function Slider() {
       autoplay={{ delay: 3000 }}
     >
       {listings
-        .filter(listing => listing.images && listing.images.length > 0)
+        .filter((listing) => listing.images && listing.images.length > 0)
         .map((listing) => (
           <SwiperSlide
             key={listing._id}

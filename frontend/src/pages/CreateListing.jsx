@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { FaMapMarkerAlt, FaSearch, FaHome, FaImage } from "react-icons/fa";
 import { API_ENDPOINTS } from "../config";
 import Spinner from "../Components/Spinner";
+import PriceSuggestion from "../Components/PriceSuggestion";
 
 export default function CreateListing() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function CreateListing() {
     bathrooms: 1,
     parking: false,
     furnished: false,
+    area: "",
     address: "",
     description: "",
     offer: false,
@@ -155,6 +157,7 @@ export default function CreateListing() {
         bathrooms,
         parking,
         furnished,
+        area,
         address,
         description,
         offer,
@@ -197,12 +200,12 @@ export default function CreateListing() {
     bathrooms,
     parking,
     furnished,
+    area,
     address,
     description,
     offer,
     regularPrice,
     discountedPrice,
-    images,
   } = formData;
 
   return (
@@ -317,6 +320,24 @@ export default function CreateListing() {
                 className="w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all duration-200"
               />
             </div>
+          </div>
+
+          {/* Area */}
+          <div className="mb-8">
+            <label className="block text-sm font-semibold text-gray-700 mb-3">
+              Area (square meters)
+            </label>
+            <input
+              type="number"
+              id="area"
+              value={area}
+              onChange={onChange}
+              min="10"
+              max="10000"
+              required
+              placeholder="e.g., 120"
+              className="w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all duration-200"
+            />
           </div>
 
           {/* Parking */}
@@ -499,14 +520,25 @@ export default function CreateListing() {
             </div>
           </div>
 
+          {/* AI Price Suggestion - Only for Sale properties */}
+          {type === "sale" && (
+            <PriceSuggestion 
+              formData={formData}
+              onPriceSelect={(price) => {
+                setFormData(prev => ({ ...prev, regularPrice: price }));
+                toast.success(`Price set to ${price.toLocaleString()} TND`);
+              }}
+            />
+          )}
+
           {/* Regular Price */}
           <div className="mb-8">
             <label className="block text-sm font-semibold text-gray-700 mb-3">
-              Regular Price {type === "rent" && "per Month"}
+              Regular Price (TND) {type === "rent" && "per Month"}
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <span className="text-gray-500 text-lg">$</span>
+                <span className="text-gray-500 text-lg">TND</span>
               </div>
               <input
                 type="number"
@@ -516,7 +548,7 @@ export default function CreateListing() {
                 min="50"
                 max="400000000"
                 required
-                className="w-full pl-8 pr-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all duration-200"
+                className="w-full pl-16 pr-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all duration-200"
               />
             </div>
           </div>
@@ -525,11 +557,11 @@ export default function CreateListing() {
           {offer && (
             <div className="mb-8">
               <label className="block text-sm font-semibold text-gray-700 mb-3">
-                Discounted Price {type === "rent" && "per Month"}
+                Discounted Price (TND) {type === "rent" && "per Month"}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <span className="text-gray-500 text-lg">$</span>
+                  <span className="text-gray-500 text-lg">TND</span>
                 </div>
                 <input
                   type="number"
@@ -539,7 +571,7 @@ export default function CreateListing() {
                   min="50"
                   max="400000000"
                   required={offer}
-                  className="w-full pl-8 pr-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all duration-200"
+                  className="w-full pl-16 pr-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all duration-200"
                 />
               </div>
             </div>

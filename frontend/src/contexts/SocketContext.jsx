@@ -21,7 +21,7 @@ export const SocketProvider = ({ children }) => {
     const getUser = () => {
       const token = localStorage.getItem("token");
       if (!token) return null;
-      
+
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
         if (payload.exp * 1000 < Date.now()) {
@@ -29,7 +29,7 @@ export const SocketProvider = ({ children }) => {
         }
         return {
           id: payload.id, // The backend uses 'id' not 'userId'
-          email: payload.email
+          email: payload.email,
         };
       } catch (error) {
         console.error("Error parsing token:", error);

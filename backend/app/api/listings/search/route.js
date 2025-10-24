@@ -1,5 +1,5 @@
-import { withCORS } from '../../../../lib/cors';
-import clientPromise from '../../../../lib/mongodb';
+import { withCORS } from "../../../../lib/cors";
+import clientPromise from "../../../../lib/mongodb";
 
 async function searchListings(request) {
   try {
@@ -8,27 +8,27 @@ async function searchListings(request) {
 
     // Build MongoDB query from search parameters
     const query = {};
-    
+
     // Location search (case-insensitive partial match)
-    const location = params.get('location');
+    const location = params.get("location");
     if (location) {
       query.$or = [
-        { address: { $regex: location, $options: 'i' } },
-        { city: { $regex: location, $options: 'i' } },
-        { state: { $regex: location, $options: 'i' } },
-        { zipCode: { $regex: location, $options: 'i' } },
+        { address: { $regex: location, $options: "i" } },
+        { city: { $regex: location, $options: "i" } },
+        { state: { $regex: location, $options: "i" } },
+        { zipCode: { $regex: location, $options: "i" } },
       ];
     }
 
     // Property type
-    const type = params.get('type');
-    if (type && type !== 'all') {
+    const type = params.get("type");
+    if (type && type !== "all") {
       query.type = type;
     }
 
     // Price range
-    const minPrice = params.get('minPrice');
-    const maxPrice = params.get('maxPrice');
+    const minPrice = params.get("minPrice");
+    const maxPrice = params.get("maxPrice");
     if (minPrice || maxPrice) {
       query.$and = query.$and || [];
       const priceQuery = {};
@@ -39,40 +39,37 @@ async function searchListings(request) {
         priceQuery.$lte = parseFloat(maxPrice);
       }
       query.$and.push({
-        $or: [
-          { regularPrice: priceQuery },
-          { discountedPrice: priceQuery }
-        ]
+        $or: [{ regularPrice: priceQuery }, { discountedPrice: priceQuery }],
       });
     }
 
     // Bedrooms (minimum)
-    const bedrooms = params.get('bedrooms');
+    const bedrooms = params.get("bedrooms");
     if (bedrooms) {
       query.bedrooms = { $gte: parseInt(bedrooms) };
     }
 
     // Bathrooms (minimum)
-    const bathrooms = params.get('bathrooms');
+    const bathrooms = params.get("bathrooms");
     if (bathrooms) {
       query.bathrooms = { $gte: parseInt(bathrooms) };
     }
 
     // Sorting
     let sortOption = { timestamp: -1 }; // Default: newest first
-    const sortBy = params.get('sortBy');
-    
+    const sortBy = params.get("sortBy");
+
     switch (sortBy) {
-      case 'date-asc':
+      case "date-asc":
         sortOption = { timestamp: 1 };
         break;
-      case 'price-asc':
+      case "price-asc":
         sortOption = { regularPrice: 1 };
         break;
-      case 'price-desc':
+      case "price-desc":
         sortOption = { regularPrice: -1 };
         break;
-      case 'popular':
+      case "popular":
         sortOption = { views: -1 }; // Assuming you track views
         break;
       default:
@@ -82,34 +79,38 @@ async function searchListings(request) {
     // Execute query
     const client = await clientPromise;
     const db = client.db();
-    
-    const listings = await db.collection('listings')
+
+    const listings = await db
+      .collection("listings")
       .find(query)
       .sort(sortOption)
       .limit(50) // Limit results
       .toArray();
 
-    const total = await db.collection('listings').countDocuments(query);
+    const total = await db.collection("listings").countDocuments(query);
 
-    console.log('Search query:', query);
-    console.log('Found listings:', listings.length);
+    console.log("Search query:", query);
+    console.log("Found listings:", listings.length);
 
     return new Response(
       JSON.stringify({
         listings,
         total,
-        query: Object.fromEntries(params.entries())
+        query: Object.fromEntries(params.entries()),
       }),
       {
         status: 200,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { "Content-Type": "application/json" },
       }
     );
   } catch (error) {
-    console.error('Search error:', error);
+    console.error("Search error:", error);
     return new Response(
-      JSON.stringify({ message: 'Failed to search listings', error: error.message }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({
+        message: "Failed to search listings",
+        error: error.message,
+      }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 }
@@ -120,9 +121,9 @@ export async function OPTIONS() {
   return new Response(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
     },
   });
 }

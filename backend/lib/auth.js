@@ -1,7 +1,7 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
+const JWT_SECRET = process.env.JWT_SECRET || "changeme";
 
 export async function hashPassword(password) {
   return await bcrypt.hash(password, 10);
@@ -13,7 +13,9 @@ export async function comparePassword(password, hash) {
 
 export function generateToken(user) {
   // Only include non-sensitive info in the token
-  return jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+  return jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
+    expiresIn: "7d",
+  });
 }
 
 export function verifyToken(token) {
@@ -21,7 +23,7 @@ export function verifyToken(token) {
     const decoded = jwt.verify(token, JWT_SECRET);
     return { userId: decoded.id, email: decoded.email };
   } catch (error) {
-    console.error('Token verification failed:', error.message);
+    console.error("Token verification failed:", error.message);
     return null;
   }
 }

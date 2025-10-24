@@ -1,19 +1,25 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useSocket } from '../contexts/SocketContext';
-import { FaPaperPlane, FaTimes, FaCircle } from 'react-icons/fa';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect, useRef } from "react";
+import { useSocket } from "../contexts/SocketContext";
+import { FaPaperPlane, FaTimes, FaCircle } from "react-icons/fa";
+import { toast } from "react-toastify";
 
-export default function Chat({ recipientId, recipientName, listingId, listingName, onClose }) {
+export default function Chat({
+  recipientId,
+  recipientName,
+  listingId,
+  listingName,
+  onClose,
+}) {
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const { socket, connected, isUserOnline } = useSocket();
 
-  const user = JSON.parse(localStorage.getItem('user'));
-  const token = localStorage.getItem('token');
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
   const isOnline = isUserOnline(recipientId);
 
   // Fetch message history
@@ -26,26 +32,26 @@ export default function Chat({ recipientId, recipientName, listingId, listingNam
     if (!socket) return;
 
     // Listen for incoming messages
-    socket.on('message:receive', (data) => {
+    socket.on("message:receive", (data) => {
       if (data.from === recipientId) {
         setMessages((prev) => [...prev, data]);
         scrollToBottom();
-        
+
         // Mark as read
         markAsRead(data.from);
       }
     });
 
     // Listen for typing indicator
-    socket.on('typing:indicator', (data) => {
+    socket.on("typing:indicator", (data) => {
       if (data.from === recipientId) {
         setIsTyping(data.isTyping);
       }
     });
 
     return () => {
-      socket.off('message:receive');
-      socket.off('typing:indicator');
+      socket.off("message:receive");
+      socket.off("typing:indicator");
     };
   }, [socket, recipientId]);
 
@@ -66,13 +72,13 @@ export default function Chat({ recipientId, recipientName, listingId, listingNam
         const data = await response.json();
         setMessages(data.messages);
         scrollToBottom();
-        
+
         // Mark messages as read
         markAsRead(recipientId);
       }
     } catch (error) {
-      console.error('Error fetching messages:', error);
-      toast.error('Failed to load messages');
+      console.error("Error fetching messages:", error);
+      toast.error("Failed to load messages");
     } finally {
       setLoading(false);
     }
@@ -81,13 +87,13 @@ export default function Chat({ recipientId, recipientName, listingId, listingNam
   const markAsRead = async (fromUserId) => {
     try {
       await fetch(`http://localhost:3001/api/chat/read?from=${fromUserId}`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
     } catch (error) {
-      console.error('Error marking messages as read:', error);
+      console.error("Error marking messages as read:", error);
     }
   };
 
@@ -105,13 +111,13 @@ export default function Chat({ recipientId, recipientName, listingId, listingNam
 
     try {
       // Send via socket for real-time delivery
-      socket.emit('message:send', messageData);
+      socket.emit("message:send", messageData);
 
       // Save to database
-      const response = await fetch('http://localhost:3001/api/chat/messages', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3001/api/chat/messages", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(messageData),
@@ -120,15 +126,15 @@ export default function Chat({ recipientId, recipientName, listingId, listingNam
       if (response.ok) {
         const data = await response.json();
         setMessages((prev) => [...prev, data.message]);
-        setNewMessage('');
+        setNewMessage("");
         scrollToBottom();
-        
+
         // Stop typing indicator
-        socket.emit('typing:stop', { to: recipientId, from: user.id });
+        socket.emit("typing:stop", { to: recipientId, from: user.id });
       }
     } catch (error) {
-      console.error('Error sending message:', error);
-      toast.error('Failed to send message');
+      console.error("Error sending message:", error);
+      toast.error("Failed to send message");
     }
   };
 
@@ -138,7 +144,7 @@ export default function Chat({ recipientId, recipientName, listingId, listingNam
     if (!socket) return;
 
     // Send typing indicator
-    socket.emit('typing:start', { to: recipientId, from: user.id });
+    socket.emit("typing:start", { to: recipientId, from: user.id });
 
     // Clear previous timeout
     if (typingTimeoutRef.current) {
@@ -147,12 +153,12 @@ export default function Chat({ recipientId, recipientName, listingId, listingNam
 
     // Stop typing after 1 second of inactivity
     typingTimeoutRef.current = setTimeout(() => {
-      socket.emit('typing:stop', { to: recipientId, from: user.id });
+      socket.emit("typing:stop", { to: recipientId, from: user.id });
     }, 1000);
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const formatTime = (timestamp) => {
@@ -160,10 +166,14 @@ export default function Chat({ recipientId, recipientName, listingId, listingNam
     const now = new Date();
     const diff = now - date;
 
-    if (diff < 60000) return 'Just now';
+    if (diff < 60000) return "Just now";
     if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
-    if (diff < 86400000) return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    if (diff < 86400000)
+      return date.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+      });
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   };
 
   return (
@@ -173,10 +183,16 @@ export default function Chat({ recipientId, recipientName, listingId, listingNam
         <div>
           <h3 className="font-semibold flex items-center gap-2">
             {recipientName}
-            <FaCircle className={`text-xs ${isOnline ? 'text-green-400' : 'text-gray-400'}`} />
+            <FaCircle
+              className={`text-xs ${
+                isOnline ? "text-green-400" : "text-gray-400"
+              }`}
+            />
           </h3>
           {listingName && (
-            <p className="text-xs text-blue-100 truncate">About: {listingName}</p>
+            <p className="text-xs text-blue-100 truncate">
+              About: {listingName}
+            </p>
           )}
         </div>
         <button
@@ -210,19 +226,21 @@ export default function Chat({ recipientId, recipientName, listingId, listingNam
             return (
               <div
                 key={index}
-                className={`flex ${isSentByMe ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${
+                  isSentByMe ? "justify-end" : "justify-start"
+                }`}
               >
                 <div
                   className={`max-w-[75%] rounded-lg p-3 ${
                     isSentByMe
-                      ? 'bg-blue-600 text-white rounded-br-none'
-                      : 'bg-white text-gray-800 rounded-bl-none shadow'
+                      ? "bg-blue-600 text-white rounded-br-none"
+                      : "bg-white text-gray-800 rounded-bl-none shadow"
                   }`}
                 >
                   <p className="text-sm">{msg.message}</p>
                   <p
                     className={`text-xs mt-1 ${
-                      isSentByMe ? 'text-blue-100' : 'text-gray-500'
+                      isSentByMe ? "text-blue-100" : "text-gray-500"
                     }`}
                   >
                     {formatTime(msg.timestamp || msg.createdAt)}
@@ -247,7 +265,10 @@ export default function Chat({ recipientId, recipientName, listingId, listingNam
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSendMessage} className="p-4 border-t bg-white rounded-b-lg">
+      <form
+        onSubmit={handleSendMessage}
+        className="p-4 border-t bg-white rounded-b-lg"
+      >
         <div className="flex items-center gap-2">
           <input
             type="text"

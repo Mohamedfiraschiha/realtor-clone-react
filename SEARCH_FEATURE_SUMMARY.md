@@ -3,17 +3,20 @@
 ## ✅ Features Implemented
 
 ### 1. **Filter by Property Attributes**
+
 - ✅ Price range (min/max)
 - ✅ Number of bedrooms (minimum)
 - ✅ Number of bathrooms (minimum)
 - ✅ Property type (sale/rent)
 
 ### 2. **Location Search**
+
 - ✅ Search by city, neighborhood, or ZIP code
 - ✅ Case-insensitive partial matching
 - ✅ Searches across multiple address fields
 
 ### 3. **Sorting Options**
+
 - ✅ Newest first
 - ✅ Oldest first
 - ✅ Price: Low to High
@@ -21,6 +24,7 @@
 - ✅ Most Popular (by views)
 
 ### 4. **Save Search Criteria**
+
 - ✅ Save unlimited searches with custom names
 - ✅ Load saved searches instantly
 - ✅ Delete saved searches
@@ -30,6 +34,7 @@
 ## 📁 Files Created/Modified
 
 ### Frontend Components
+
 1. **`AdvancedSearch.jsx`** - Main search component with filters
 2. **`SearchResults.jsx`** - Display search results page
 3. **`Home.jsx`** - Added AdvancedSearch component
@@ -37,11 +42,13 @@
 5. **`config.js`** - Added SEARCH endpoint
 
 ### Backend API
+
 1. **`backend/app/api/listings/search/route.js`** - Search endpoint with MongoDB queries
 
 ## 🎯 How to Use
 
 ### User Flow:
+
 1. User opens the homepage
 2. Sees the Advanced Search component below the slider
 3. Enters search criteria (location, price, bedrooms, etc.)
@@ -51,6 +58,7 @@
 7. Can load/delete saved searches
 
 ### Example Search:
+
 ```
 Location: "New York"
 Type: "rent"
@@ -63,6 +71,7 @@ Sort By: "Price: Low to High"
 ## 🔧 Backend Query Logic
 
 The search API builds dynamic MongoDB queries:
+
 - Location searches across `address`, `city`, `state`, `zipCode`
 - Price filters check both `regularPrice` and `discountedPrice`
 - Bedrooms/bathrooms use `$gte` (greater than or equal)

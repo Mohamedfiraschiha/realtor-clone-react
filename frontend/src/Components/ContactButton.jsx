@@ -9,12 +9,12 @@ export default function ContactButton({
   listingName,
 }) {
   const [showChat, setShowChat] = useState(false);
-  
+
   // Get user info from token
   const getUser = () => {
     const token = localStorage.getItem("token");
     if (!token) return null;
-    
+
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
       // Check if token is expired
@@ -23,7 +23,7 @@ export default function ContactButton({
       }
       return {
         id: payload.id, // The backend uses 'id' not 'userId'
-        email: payload.email
+        email: payload.email,
       };
     } catch (error) {
       console.error("Error parsing token:", error);

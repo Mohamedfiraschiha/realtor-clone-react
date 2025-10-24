@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { FaComments, FaTimes, FaCircle } from 'react-icons/fa';
-import { useSocket } from '../contexts/SocketContext';
-import Chat from './Chat';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from "react";
+import { FaComments, FaTimes, FaCircle } from "react-icons/fa";
+import { useSocket } from "../contexts/SocketContext";
+import Chat from "./Chat";
+import { toast } from "react-toastify";
 
 export default function ChatList() {
   const [conversations, setConversations] = useState([]);
@@ -12,7 +12,7 @@ export default function ChatList() {
   const [totalUnread, setTotalUnread] = useState(0);
   const { socket, isUserOnline } = useSocket();
 
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (isOpen) {
@@ -24,35 +24,41 @@ export default function ChatList() {
   useEffect(() => {
     if (!socket) return;
 
-    socket.on('message:receive', () => {
+    socket.on("message:receive", () => {
       fetchConversations();
     });
 
     return () => {
-      socket.off('message:receive');
+      socket.off("message:receive");
     };
   }, [socket]);
 
   const fetchConversations = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3001/api/chat/conversations', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "http://localhost:3001/api/chat/conversations",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
         setConversations(data.conversations);
-        
+
         // Calculate total unread
-        const unread = data.conversations.reduce((sum, conv) => sum + conv.unreadCount, 0);
+        const unread = data.conversations.reduce(
+          (sum, conv) => sum + conv.unreadCount,
+          0
+        );
         setTotalUnread(unread);
       }
     } catch (error) {
-      console.error('Error fetching conversations:', error);
-      toast.error('Failed to load conversations');
+      console.error("Error fetching conversations:", error);
+      toast.error("Failed to load conversations");
     } finally {
       setLoading(false);
     }
@@ -73,10 +79,14 @@ export default function ChatList() {
     const now = new Date();
     const diff = now - date;
 
-    if (diff < 60000) return 'Just now';
+    if (diff < 60000) return "Just now";
     if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
-    if (diff < 86400000) return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    if (diff < 86400000)
+      return date.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+      });
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   };
 
   return (
@@ -89,7 +99,7 @@ export default function ChatList() {
         <FaComments className="text-2xl" />
         {totalUnread > 0 && (
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-            {totalUnread > 9 ? '9+' : totalUnread}
+            {totalUnread > 9 ? "9+" : totalUnread}
           </span>
         )}
       </button>
@@ -135,7 +145,7 @@ export default function ChatList() {
                           </h4>
                           <FaCircle
                             className={`text-xs ${
-                              isOnline ? 'text-green-500' : 'text-gray-400'
+                              isOnline ? "text-green-500" : "text-gray-400"
                             }`}
                           />
                         </div>
@@ -154,7 +164,9 @@ export default function ChatList() {
                         </span>
                         {conversation.unreadCount > 0 && (
                           <span className="bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                            {conversation.unreadCount > 9 ? '9+' : conversation.unreadCount}
+                            {conversation.unreadCount > 9
+                              ? "9+"
+                              : conversation.unreadCount}
                           </span>
                         )}
                       </div>

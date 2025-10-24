@@ -1,65 +1,73 @@
-import { NextResponse } from 'next/server';
-import connectDB from '../../../../lib/mongodb';
-import Message from '../../../../models/Message';
-import { verifyToken } from '../../../../lib/auth';
+import { NextResponse } from "next/server";
+import clientPromise from "../../../../lib/mongodb";
+import { createMessage, findMessages } from "../../../../models/Message";
+import { verifyToken } from "../../../../lib/auth";
+import { ObjectId } from "mongodb";
+import { withCORS } from "../../../../lib/cors";
 
 // GET - Get conversation between two users
-export async function GET(request) {
+async function handleGET(request) {
   try {
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = request.headers.get("authorization")?.replace("Bearer ", "");
     if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const decoded = verifyToken(token);
     if (!decoded) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
     const userId = decoded.userId;
     const { searchParams } = new URL(request.url);
-    const otherUserId = searchParams.get('userId');
-    const listingId = searchParams.get('listingId');
+    const otherUserId = searchParams.get("userId");
+    const listingId = searchParams.get("listingId");
 
-    await connectDB();
+    if (!otherUserId) {
+      return NextResponse.json(
+        { error: "userId is required" },
+        { status: 400 }
+      );
+    }
+
+    const client = await clientPromise;
 
     let query = {
       $or: [
-        { from: userId, to: otherUserId },
-        { from: otherUserId, to: userId },
+        { from: new ObjectId(userId), to: new ObjectId(otherUserId) },
+        { from: new ObjectId(otherUserId), to: new ObjectId(userId) },
       ],
     };
 
     if (listingId) {
-      query.listingId = listingId;
+      query.listingId = new ObjectId(listingId);
     }
 
-    const messages = await Message.find(query)
-      .populate('from', 'fullName email')
-      .populate('to', 'fullName email')
-      .sort({ createdAt: 1 });
+    const messages = await findMessages(client, query, {
+      sort: { createdAt: 1 },
+    });
 
     return NextResponse.json({ messages }, { status: 200 });
   } catch (error) {
-    console.error('Error fetching messages:', error);
+    console.error("Error fetching messages:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch messages' },
+      { error: "Failed to fetch messages" },
       { status: 500 }
     );
   }
 }
 
 // POST - Save a new message
-export async function POST(request) {
+async function handlePOST(request) {
   try {
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = request.headers.get("authorization")?.replace("Bearer ", "");
     if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const decoded = verifyToken(token);
     if (!decoded) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
     const body = await request.json();
@@ -67,14 +75,14 @@ export async function POST(request) {
 
     if (!to || !message) {
       return NextResponse.json(
-        { error: 'Recipient and message are required' },
+        { error: "Recipient and message are required" },
         { status: 400 }
       );
     }
 
-    await connectDB();
+    const client = await clientPromise;
 
-    const newMessage = await Message.create({
+    const newMessage = await createMessage(client, {
       from: decoded.userId,
       to,
       message,
@@ -82,19 +90,16 @@ export async function POST(request) {
       listingName,
     });
 
-    const populatedMessage = await Message.findById(newMessage._id)
-      .populate('from', 'fullName email')
-      .populate('to', 'fullName email');
-
-    return NextResponse.json(
-      { message: populatedMessage },
-      { status: 201 }
-    );
+    return NextResponse.json({ message: newMessage }, { status: 201 });
   } catch (error) {
-    console.error('Error saving message:', error);
+    console.error("Error saving message:", error);
     return NextResponse.json(
-      { error: 'Failed to save message' },
+      { error: "Failed to save message" },
       { status: 500 }
     );
   }
 }
+
+export const GET = withCORS(handleGET);
+export const POST = withCORS(handlePOST);
+export const OPTIONS = withCORS(() => new Response(null, { status: 204 }));

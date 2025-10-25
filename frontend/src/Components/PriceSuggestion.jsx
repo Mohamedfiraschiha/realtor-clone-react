@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
-import { FaRobot, FaSpinner, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
+import React, { useState } from "react";
+import {
+  FaRobot,
+  FaSpinner,
+  FaCheckCircle,
+  FaExclamationCircle,
+} from "react-icons/fa";
 
 export default function PriceSuggestion({ formData, onPriceSelect }) {
   const [loading, setLoading] = useState(false);
@@ -25,26 +30,26 @@ export default function PriceSuggestion({ formData, onPriceSelect }) {
         airconditioning: true, // Default for modern homes
         parking: parseInt(formData.parking) || 0,
         prefarea: false, // Default - can be added to form
-        furnishingstatus: formData.furnished ? 'furnished' : 'unfurnished'
+        furnishingstatus: formData.furnished ? "furnished" : "unfurnished",
       };
 
-      const response = await fetch('http://localhost:3001/api/predict-price', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3001/api/predict-price", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(requestData),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get price prediction');
+        throw new Error("Failed to get price prediction");
       }
 
       const data = await response.json();
       setPrediction(data);
     } catch (err) {
-      console.error('Price prediction error:', err);
-      setError('Unable to get price suggestion. Please try again.');
+      console.error("Price prediction error:", err);
+      setError("Unable to get price suggestion. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -82,7 +87,7 @@ export default function PriceSuggestion({ formData, onPriceSelect }) {
             </p>
           </div>
         </div>
-        
+
         <button
           onClick={getPriceSuggestion}
           disabled={loading || !formData.area || !formData.bedrooms}
@@ -105,7 +110,8 @@ export default function PriceSuggestion({ formData, onPriceSelect }) {
       {!formData.area || !formData.bedrooms ? (
         <div className="text-sm text-amber-600 bg-amber-50 p-3 rounded-lg flex items-center gap-2">
           <FaExclamationCircle />
-          Please fill in at least the area and number of bedrooms to get a price suggestion
+          Please fill in at least the area and number of bedrooms to get a price
+          suggestion
         </div>
       ) : null}
 
@@ -123,7 +129,7 @@ export default function PriceSuggestion({ formData, onPriceSelect }) {
               <FaCheckCircle className="text-xl" />
               <span className="font-semibold">Prediction Complete</span>
             </div>
-            
+
             <div className="grid md:grid-cols-3 gap-4">
               {/* Minimum Price */}
               <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
@@ -169,8 +175,14 @@ export default function PriceSuggestion({ formData, onPriceSelect }) {
             </div>
 
             <div className="mt-4 text-xs text-slate-500 text-center">
-              <p>AI prediction based on area, bedrooms, bathrooms, parking, and furnishing status</p>
-              <p className="mt-1">Accuracy: ±15% • This is an estimate and may vary based on location and market conditions</p>
+              <p>
+                AI prediction based on area, bedrooms, bathrooms, parking, and
+                furnishing status
+              </p>
+              <p className="mt-1">
+                Accuracy: ±15% • This is an estimate and may vary based on
+                location and market conditions
+              </p>
             </div>
           </div>
         </div>

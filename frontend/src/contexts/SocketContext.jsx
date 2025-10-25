@@ -24,15 +24,18 @@ export const SocketProvider = ({ children }) => {
 
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
+        
         if (payload.exp * 1000 < Date.now()) {
           return null;
         }
-        return {
-          id: payload.id, // The backend uses 'id' not 'userId'
+        
+        const user = {
+          id: payload.userId || payload.id, // Support both userId and id from JWT payload
           email: payload.email,
         };
+        return user;
       } catch (error) {
-        console.error("Error parsing token:", error);
+        console.error("❌ Error parsing token:", error);
         return null;
       }
     };
@@ -44,24 +47,34 @@ export const SocketProvider = ({ children }) => {
 
     // Initialize socket connection
     const SOCKET_URL =
-      process.env.REACT_APP_SOCKET_URL || "http://localhost:3001";
+      process.env.REACT_APP_SOCKET_URL || "http://localhost:3002";
 
-    // Connect to Socket.io (this will initialize the server automatically)
+    console.log("🔌 Connecting to Socket.io server:", SOCKET_URL);
+
+    // Connect to standalone Socket.io server
     const newSocket = io(SOCKET_URL, {
-      path: "/api/socket",
       transports: ["websocket", "polling"],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
     });
 
     newSocket.on("connect", () => {
-      console.log("Socket connected:", newSocket.id);
+      console.log("✅ Socket connected:", newSocket.id);
       setConnected(true);
 
       // Join with user ID
+      console.log("👤 Joining with user ID:", user.id);
       newSocket.emit("user:join", user.id);
     });
 
+    newSocket.on("connect_error", (error) => {
+      console.error("❌ Socket connection error:", error.message);
+      setConnected(false);
+    });
+
     newSocket.on("disconnect", () => {
-      console.log("Socket disconnected");
+      console.log("🔌 Socket disconnected");
       setConnected(false);
     });
 

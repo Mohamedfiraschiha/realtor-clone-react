@@ -20,8 +20,8 @@ if (isDev) {
   API_BASE_URL = "";
 } else if (hostname.includes("vercel.app")) {
   // If this is the separate frontend deployment, point to the backend project domain to avoid 404s.
-  if (hostname.startsWith("realtor-clone-react-4ziu")) {
-    API_BASE_URL = "https://realtor-clone-react.vercel.app";
+  if (hostname.startsWith("fourwalls-")) {
+    API_BASE_URL = "https://fourwalls.vercel.app";
   } else {
     // Otherwise prefer same-origin
     API_BASE_URL = "";

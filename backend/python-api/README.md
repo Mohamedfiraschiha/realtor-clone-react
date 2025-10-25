@@ -10,16 +10,19 @@ This Python Flask API provides AI-powered house price predictions based on prope
 ## Installation
 
 1. Navigate to the python-api directory:
+
 ```bash
 cd backend/python-api
 ```
 
 2. Create a virtual environment (recommended):
+
 ```bash
 python -m venv venv
 ```
 
 3. Activate the virtual environment:
+
    - **Windows (PowerShell)**:
      ```powershell
      .\venv\Scripts\Activate.ps1
@@ -34,6 +37,7 @@ python -m venv venv
      ```
 
 4. Install required packages:
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -63,10 +67,13 @@ The API will run on `http://localhost:5000`
 ## API Endpoints
 
 ### Health Check
+
 ```
 GET /health
 ```
+
 Response:
+
 ```json
 {
   "status": "healthy",
@@ -75,12 +82,14 @@ Response:
 ```
 
 ### Price Prediction
+
 ```
 POST /predict
 Content-Type: application/json
 ```
 
 Request body:
+
 ```json
 {
   "area": 150,
@@ -99,9 +108,10 @@ Request body:
 ```
 
 Response:
+
 ```json
 {
-  "predicted_price": 250000.50,
+  "predicted_price": 250000.5,
   "price_range": {
     "min": 212500.42,
     "max": 287500.58
@@ -123,6 +133,7 @@ The Next.js API route at `/api/predict-price` forwards requests to the Python AP
 ## Model Features
 
 The model uses these property features for prediction:
+
 - Area (square meters)
 - Number of bedrooms
 - Number of bathrooms
@@ -145,20 +156,25 @@ The model uses these property features for prediction:
 ## Troubleshooting
 
 ### Import errors
+
 Make sure you've activated the virtual environment and installed all requirements.
 
 ### Model not found
+
 Run `python train_model.py` to create the model file.
 
 ### Port already in use
+
 Change the port in `app.py` by modifying the `PORT` environment variable or the default port.
 
 ### CORS errors
+
 The API has CORS enabled for all origins. If you still face issues, check your browser console for details.
 
 ## Production Deployment
 
 For production:
+
 1. Replace dummy training data with real Tunisian market data
 2. Use a production WSGI server like Gunicorn instead of Flask's development server
 3. Set up proper environment variables
@@ -167,6 +183,7 @@ For production:
 6. Consider containerizing with Docker
 
 Example with Gunicorn:
+
 ```bash
 pip install gunicorn
 gunicorn -w 4 -b 0.0.0.0:5000 app:app

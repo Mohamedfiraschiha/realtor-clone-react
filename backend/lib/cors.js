@@ -21,7 +21,7 @@ export function withCORS(handler) {
         status: 204,
         headers: {
           'Access-Control-Allow-Origin': allowedOrigin,
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
           'Access-Control-Allow-Credentials': 'true',
           'Vary': 'Origin'
@@ -38,7 +38,7 @@ export function withCORS(handler) {
       // Set CORS headers for the response
       if (isAllowedOrigin) {
         headers.set('Access-Control-Allow-Origin', allowedOrigin);
-        headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
         headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         headers.set('Access-Control-Allow-Credentials', 'true');
         headers.set('Vary', 'Origin');

@@ -29,7 +29,7 @@ export default function Chat({
         return null;
       }
       return {
-        id: payload.id, // The backend uses 'id' not 'userId'
+        id: payload.userId, // Fixed: use userId from JWT payload
         email: payload.email,
       };
     } catch (error) {
@@ -81,8 +81,8 @@ export default function Chat({
     try {
       setLoading(true);
       const url = listingId
-        ? `http://localhost:3001/api/chat/messages?userId=${recipientId}&listingId=${listingId}`
-        : `http://localhost:3001/api/chat/messages?userId=${recipientId}`;
+        ? `/api/chat/messages?userId=${recipientId}&listingId=${listingId}`
+        : `/api/chat/messages?userId=${recipientId}`;
 
       const response = await fetch(url, {
         headers: {
@@ -108,7 +108,7 @@ export default function Chat({
 
   const markAsRead = async (fromUserId) => {
     try {
-      await fetch(`http://localhost:3001/api/chat/read?from=${fromUserId}`, {
+      await fetch(`/api/chat/read?from=${fromUserId}`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -121,7 +121,12 @@ export default function Chat({
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim() || !connected) return;
+    if (!newMessage.trim()) return;
+    
+    if (!user || !user.id) {
+      toast.error("Please sign in to send messages");
+      return;
+    }
 
     const messageData = {
       to: recipientId,
@@ -132,11 +137,13 @@ export default function Chat({
     };
 
     try {
-      // Send via socket for real-time delivery
-      socket.emit("message:send", messageData);
+      // Send via socket for real-time delivery (if connected)
+      if (connected && socket) {
+        socket.emit("message:send", messageData);
+      }
 
       // Save to database
-      const response = await fetch("http://localhost:3001/api/chat/messages", {
+      const response = await fetch("/api/chat/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -151,8 +158,14 @@ export default function Chat({
         setNewMessage("");
         scrollToBottom();
 
-        // Stop typing indicator
-        socket.emit("typing:stop", { to: recipientId, from: user.id });
+        // Stop typing indicator (if connected)
+        if (connected && socket) {
+          socket.emit("typing:stop", { to: recipientId, from: user.id });
+        }
+        
+        toast.success("Message sent!");
+      } else {
+        throw new Error("Failed to send message");
       }
     } catch (error) {
       console.error("Error sending message:", error);
@@ -298,7 +311,6 @@ export default function Chat({
             onChange={handleTyping}
             placeholder="Type a message..."
             className="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-600"
-            disabled={!connected}
           />
           <button
             type="submit"

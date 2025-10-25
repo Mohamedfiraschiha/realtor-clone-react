@@ -1,9 +1,9 @@
 {
-  "short_name": "Realtor App",
-  "name": "Realtor Clone React",
+  "short_name": "FourWalls",
+  "name": "FourWalls - Your Home Awaits",
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#0f172a",
   "background_color": "#ffffff",
   "icons": [
     {

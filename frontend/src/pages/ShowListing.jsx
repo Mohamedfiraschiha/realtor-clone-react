@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "../Components/Spinner";
 import {
@@ -8,21 +8,27 @@ import {
   FaParking,
   FaCouch,
   FaMapMarkerAlt,
-  FaCheckCircle,
 } from "react-icons/fa";
-import { register } from "swiper/element/bundle";
-import "swiper/css/bundle";
 import { API_ENDPOINTS } from "../config";
 import ContactButton from "../Components/ContactButton";
-
-register(); // Register Swiper custom elements
+import InterestedButton from "../Components/InterestedButton";
+import FavoriteButton from "../Components/FavoriteButton";
+import ScheduleVisitModal from "../Components/ScheduleVisitModal";
+import MakeOfferModal from "../Components/MakeOfferModal";
+import RentalApplicationModal from "../Components/RentalApplicationModal";
 
 export default function ShowListing() {
   const { id } = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
-  const swiperRef = useRef(null);
   const [shareLinkCopied, setShareLinkCopied] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(0);
+  
+  // Modal states
+  const [showScheduleVisit, setShowScheduleVisit] = useState(false);
+  const [showMakeOffer, setShowMakeOffer] = useState(false);
+  const [showRentalApp, setShowRentalApp] = useState(false);
+  const [ownerData, setOwnerData] = useState(null);
 
   useEffect(() => {
     async function fetchListing() {
@@ -54,6 +60,7 @@ export default function ShowListing() {
           const data = await res.json();
           if (data.user) {
             setOwnerId(data.user._id);
+            setOwnerData(data.user); // Store full owner data for modals
           }
         }
       } catch (error) {
@@ -61,23 +68,6 @@ export default function ShowListing() {
       }
     }
     fetchOwner();
-  }, [listing]);
-
-  useEffect(() => {
-    if (
-      swiperRef.current &&
-      listing &&
-      listing.images &&
-      listing.images.length > 0
-    ) {
-      Object.assign(swiperRef.current, {
-        slidesPerView: 1,
-        navigation: true,
-        pagination: { clickable: true },
-        autoplay: { delay: 3000 },
-      });
-      swiperRef.current.initialize();
-    }
   }, [listing]);
 
   if (loading) return <Spinner />;
@@ -104,25 +94,40 @@ export default function ShowListing() {
         </p>
       )}
 
-      {/* Image Slider */}
+      {/* Image Gallery */}
       {listing.images && listing.images.length > 0 && (
-        <div className="relative w-full h-[400px] md:h-[500px]">
-          <swiper-container
-            ref={swiperRef}
-            init="false"
-            pagination="true"
-            style={{ width: "100%", height: "100%" }}
-          >
-            {listing.images.map((url, index) => (
-              <swiper-slide key={index}>
-                <img
-                  src={url}
-                  alt={`${listing.name} - Image ${index + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </swiper-slide>
-            ))}
-          </swiper-container>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Main Image */}
+          <div className="mb-4 rounded-2xl overflow-hidden shadow-lg">
+            <img
+              src={listing.images[selectedImage]}
+              alt={`${listing.name} - Main view`}
+              className="w-full h-[400px] md:h-[600px] object-cover"
+            />
+          </div>
+          
+          {/* Thumbnail Grid */}
+          {listing.images.length > 1 && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {listing.images.map((url, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedImage(index)}
+                  className={`rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 ${
+                    selectedImage === index
+                      ? "ring-4 ring-slate-900 scale-105"
+                      : "opacity-70 hover:opacity-100"
+                  }`}
+                >
+                  <img
+                    src={url}
+                    alt={`${listing.name} - View ${index + 1}`}
+                    className="w-full h-24 object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -268,17 +273,72 @@ export default function ShowListing() {
                   </div>
                 )}
 
-                {/* Contact Button */}
-                <div className="mt-4">
+                {/* Action Buttons */}
+                <div className="mt-4 space-y-3">
                   {ownerId ? (
-                    <ContactButton
-                      ownerId={ownerId}
-                      ownerName={
-                        listing.userName || listing.userEmail || "Owner"
-                      }
-                      listingId={listing._id}
-                      listingName={listing.name}
-                    />
+                    <>
+                      {/* I'm Interested Button */}
+                      <InterestedButton
+                        listingId={listing._id}
+                        onOpenChat={() => {
+                          // The ContactButton will be clicked automatically
+                          document.querySelector('.contact-button-trigger')?.click();
+                        }}
+                      />
+
+                      {/* Schedule Visit Button */}
+                      <button
+                        onClick={() => setShowScheduleVisit(true)}
+                        className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
+                      >
+                        📅 Schedule a Visit
+                      </button>
+
+                      {/* Make Offer (Sale Only) */}
+                      {listing.type === 'sale' && (
+                        <button
+                          onClick={() => setShowMakeOffer(true)}
+                          className="w-full px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-md hover:shadow-lg"
+                        >
+                          💰 Make an Offer
+                        </button>
+                      )}
+
+                      {/* Apply to Rent (Rent Only) */}
+                      {listing.type === 'rent' && (
+                        <button
+                          onClick={() => setShowRentalApp(true)}
+                          className="w-full px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg"
+                        >
+                          📝 Apply to Rent
+                        </button>
+                      )}
+
+                      {/* Add to Favorites */}
+                      <div className="flex items-center gap-3 px-6 py-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <span className="text-sm font-semibold text-slate-700 flex-1">
+                          Save to Favorites
+                        </span>
+                        <FavoriteButton listingId={listing._id} iconSize="text-xl" />
+                      </div>
+
+                      {/* Contact via Chat */}
+                      <div className="pt-3 border-t">
+                        <p className="text-xs text-gray-500 mb-2 text-center">
+                          Or contact owner directly
+                        </p>
+                        <div className="contact-button-trigger">
+                          <ContactButton
+                            ownerId={ownerId}
+                            ownerName={
+                              listing.userName || listing.userEmail || "Owner"
+                            }
+                            listingId={listing._id}
+                            listingName={listing.name}
+                          />
+                        </div>
+                      </div>
+                    </>
                   ) : (
                     <div className="text-center text-gray-500 py-2">
                       <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
@@ -287,6 +347,30 @@ export default function ShowListing() {
                   )}
                 </div>
               </div>
+
+              {/* Modals */}
+              {ownerData && (
+                <>
+                  <ScheduleVisitModal
+                    isOpen={showScheduleVisit}
+                    onClose={() => setShowScheduleVisit(false)}
+                    listing={listing}
+                    owner={ownerData}
+                  />
+                  <MakeOfferModal
+                    isOpen={showMakeOffer}
+                    onClose={() => setShowMakeOffer(false)}
+                    listing={listing}
+                    owner={ownerData}
+                  />
+                  <RentalApplicationModal
+                    isOpen={showRentalApp}
+                    onClose={() => setShowRentalApp(false)}
+                    listing={listing}
+                    owner={ownerData}
+                  />
+                </>
+              )}
 
               {/* Additional Info */}
               {listing.latitude !== undefined &&

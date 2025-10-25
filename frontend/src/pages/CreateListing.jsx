@@ -206,6 +206,7 @@ export default function CreateListing() {
     offer,
     regularPrice,
     discountedPrice,
+    images,
   } = formData;
 
   return (
@@ -522,10 +523,10 @@ export default function CreateListing() {
 
           {/* AI Price Suggestion - Only for Sale properties */}
           {type === "sale" && (
-            <PriceSuggestion 
+            <PriceSuggestion
               formData={formData}
               onPriceSelect={(price) => {
-                setFormData(prev => ({ ...prev, regularPrice: price }));
+                setFormData((prev) => ({ ...prev, regularPrice: price }));
                 toast.success(`Price set to ${price.toLocaleString()} TND`);
               }}
             />

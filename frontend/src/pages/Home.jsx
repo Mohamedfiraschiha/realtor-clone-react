@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { API_ENDPOINTS } from "../config";
-import Slider from "../Components/Slider";
 import ListingItem from "../Components/ListingItem";
 import AdvancedSearch from "../Components/AdvancedSearch";
 import { FaHome, FaKey, FaTag, FaChartLine } from "react-icons/fa";
@@ -71,11 +70,34 @@ export default function Home() {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      {/* Hero Slider */}
-      <Slider />
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white py-24 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            Find Your Dream Home
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            Discover the perfect property for sale or rent in your desired location
+          </p>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <Link
+              to="/search"
+              className="px-8 py-4 bg-white text-slate-900 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors duration-300 shadow-lg"
+            >
+              Browse Properties
+            </Link>
+            <Link
+              to="/create-listing"
+              className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-lg font-bold text-lg hover:bg-white hover:text-slate-900 transition-all duration-300"
+            >
+              List Your Property
+            </Link>
+          </div>
+        </div>
+      </div>
 
       {/* Advanced Search Component */}
-      <div className="relative -mt-20 z-10">
+      <div className="relative -mt-12 z-10">
         <AdvancedSearch />
       </div>
 

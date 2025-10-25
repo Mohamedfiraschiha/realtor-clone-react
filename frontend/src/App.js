@@ -10,6 +10,11 @@ import EditListing from "./pages/EditListing";
 import ShowListing from "./pages/ShowListing";
 import SearchResults from "./pages/SearchResults";
 import MapView from "./pages/MapView";
+import Favorites from "./pages/Favorites";
+import Notifications from "./pages/Notifications";
+import ManageVisits from "./pages/ManageVisits";
+import ManageOffers from "./pages/ManageOffers";
+import ManageApplications from "./pages/ManageApplications";
 import Header from "./Components/Header";
 import ChatList from "./Components/ChatList";
 import { SocketProvider } from "./contexts/SocketContext";
@@ -31,6 +36,11 @@ function App() {
             <Route path="/show-listing/:id" element={<ShowListing />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/map-view" element={<MapView />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/manage-visits" element={<ManageVisits />} />
+            <Route path="/manage-offers" element={<ManageOffers />} />
+            <Route path="/manage-applications" element={<ManageApplications />} />
           </Routes>
           <ChatList />
         </SocketProvider>

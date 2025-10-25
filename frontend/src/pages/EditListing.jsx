@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getAuth } from "firebase/auth";
 import { FaSearch, FaMapMarkerAlt, FaHome, FaImage } from "react-icons/fa";
 import Spinner from "../Components/Spinner";
 import { API_ENDPOINTS } from "../config";
@@ -514,10 +513,10 @@ export default function EditListing() {
 
             {/* AI Price Suggestion - Only for Sale properties */}
             {formData.type === "sale" && (
-              <PriceSuggestion 
+              <PriceSuggestion
                 formData={formData}
                 onPriceSelect={(price) => {
-                  setFormData(prev => ({ ...prev, regularPrice: price }));
+                  setFormData((prev) => ({ ...prev, regularPrice: price }));
                   toast.success(`Price set to ${price.toLocaleString()} TND`);
                 }}
               />
